@@ -42,11 +42,17 @@ services:
       - finance_network
 
   grafana:
+    depends_on:
+      - prometheus
     image: grafana/grafana
     container_name: finance_grafana
     restart: unless-stopped
     ports:
       - "3000:3000"
+    volumes:
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - grafana_data:/var/lib/grafana
     networks:
       - finance_network
 
@@ -56,3 +62,4 @@ networks:
 
 volumes:
   pgdata:
+  grafana_data:
