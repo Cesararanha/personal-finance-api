@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('cpf', 14)->unique();
             $table->date('birth_date');
-            $table->string('phone', 20);
+            $table->string('phone', 20)->unique();
             $table->timestamps();
         });
 
