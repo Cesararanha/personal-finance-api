@@ -26,7 +26,7 @@ class PrometheusServiceProvider extends ServiceProvider
          * want to export to prometheus
          */
         Prometheus::addGauge('My gauge')
-            ->value(function() {
+            ->value(function () {
                 return 123.45;
             });
 

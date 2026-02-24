@@ -1,8 +1,8 @@
 <?php
 
 namespace App\DTOs;
-use Carbon\Carbon;
 
+use Carbon\Carbon;
 
 class TransactionDTO
 {
@@ -14,6 +14,5 @@ class TransactionDTO
         public readonly Carbon $date,
         public readonly int $categoryId,
         public readonly int $userId,
-    )
-    {}
+    ) {}
 }
