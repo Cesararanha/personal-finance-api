@@ -17,7 +17,6 @@ class AuthController extends Controller
         private readonly UserRepositoryInterface $userRepository
     ) {}
 
-    //
     public function register(RegisterRequest $request): JsonResponse
     {
         try {

@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    //
     public function __construct(
         private readonly TransactionRepositoryInterface $repository,
     ) {}

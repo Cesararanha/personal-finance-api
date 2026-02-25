@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    //
     public function __construct(
         private readonly CategoryRepositoryInterface $repository,
     ) {}
