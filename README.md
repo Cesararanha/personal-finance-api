@@ -1,59 +1,364 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💰 Personal Finance API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API for personal finance management, built with **Laravel 12**, **PostgreSQL 15**, and containerized with **Docker**. Features complete authentication, transaction and category management, monthly summaries, API documentation with Swagger, and observability with Prometheus and Grafana.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+- [Authentication](#authentication)
+- [Business Rules](#business-rules)
+- [Project Structure](#project-structure)
+- [API Documentation](#api-documentation)
+- [Observability](#observability)
+- [Contributing](#contributing)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Overview
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+The Personal Finance API allows users to manage their personal finances through a secure, authenticated REST API. Each user has isolated access to their own data — categories and transactions are always scoped to the authenticated user.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Key capabilities:**
+- User registration and authentication via Bearer Token (Laravel Sanctum)
+- Full CRUD for income and expense categories
+- Full CRUD for financial transactions with filtering by month and category
+- Monthly financial summary (total income, total expenses, balance)
+- Interactive API documentation via Swagger UI
+- Real-time metrics via Prometheus + Grafana dashboard
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Tech Stack
 
-### Premium Partners
+| Layer | Technology |
+|---|---|
+| Language | PHP 8.4 |
+| Framework | Laravel 12 |
+| Database | PostgreSQL 15 |
+| Authentication | Laravel Sanctum (Bearer Token) |
+| API Documentation | L5-Swagger (OpenAPI 3.0) |
+| Metrics | Spatie Laravel Prometheus |
+| Observability | Prometheus + Grafana |
+| Containerization | Docker + Docker Compose |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
+
+## Architecture
+
+The project follows a layered architecture with clear separation of concerns:
+
+```
+HTTP Request
+     ↓
+Form Request        → Input validation (422 on failure)
+     ↓
+Controller          → Orchestrates the request flow
+     ↓
+Mapper              → Transforms data between layers
+     ↓
+Repository          → Database operations (via Interface)
+     ↓
+Model               → Eloquent ORM representation
+     ↓
+JSON Response
+```
+
+**Design patterns used:**
+- **Repository Pattern** — abstracts database operations behind interfaces, making the codebase testable and swappable
+- **DTO (Data Transfer Object)** — typed objects that carry data between layers without exposing database models
+- **Mapper** — handles all transformations between Request arrays, DTOs, and Models
+- **Dependency Injection** — Laravel's service container binds interfaces to implementations via `AppServiceProvider`
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- Git
+
+### Installation
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/your-username/personal-finance-api.git
+cd personal-finance-api
+```
+
+**2. Copy the environment file**
+```bash
+cp .env.example .env
+```
+
+**3. Start the containers**
+```bash
+docker compose up -d
+```
+
+**4. Run database migrations**
+```bash
+docker compose exec app php artisan migrate
+```
+
+**5. Generate the application key** *(if not already set)*
+```bash
+docker compose exec app php artisan key:generate
+```
+
+The API will be available at `http://localhost:8000`.
+
+### Useful Commands
+
+```bash
+# Stop containers
+docker compose down
+
+# View application logs
+docker compose logs app
+
+# Run code formatter (Laravel Pint)
+docker compose exec app ./vendor/bin/pint
+
+# Regenerate Swagger documentation
+docker compose exec app php artisan l5-swagger:generate
+
+# Access PostgreSQL shell
+docker compose exec db psql -U finance_user -d finance_db
+```
+
+---
+
+## Environment Variables
+
+| Variable | Description | Default |
+|---|---|---|
+| `APP_NAME` | Application name | `Laravel` |
+| `APP_ENV` | Environment (`local`, `production`) | `local` |
+| `APP_KEY` | Application encryption key | — |
+| `APP_DEBUG` | Enable debug mode | `true` |
+| `APP_URL` | Application base URL | `http://localhost` |
+| `DB_CONNECTION` | Database driver | `pgsql` |
+| `DB_HOST` | Database host | `db` |
+| `DB_PORT` | Database port | `5432` |
+| `DB_DATABASE` | Database name | `finance_db` |
+| `DB_USERNAME` | Database user | `finance_user` |
+| `DB_PASSWORD` | Database password | `finance_pass` |
+
+---
+
+## API Endpoints
+
+### Public Routes
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/register` | Register a new user |
+| `POST` | `/api/login` | Authenticate and receive a token |
+
+### Protected Routes *(require Bearer Token)*
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/logout` | Revoke the current token |
+| `GET` | `/api/me` | Get the authenticated user's data |
+| `GET` | `/api/categories` | List all categories |
+| `POST` | `/api/categories` | Create a category |
+| `GET` | `/api/categories/{id}` | Get a category by ID |
+| `PUT` | `/api/categories/{id}` | Update a category |
+| `DELETE` | `/api/categories/{id}` | Delete a category |
+| `GET` | `/api/transactions` | List all transactions |
+| `GET` | `/api/transactions?month=2025-01` | Filter transactions by month |
+| `GET` | `/api/transactions?category_id=1` | Filter transactions by category |
+| `POST` | `/api/transactions` | Create a transaction |
+| `GET` | `/api/transactions/{id}` | Get a transaction by ID |
+| `PUT` | `/api/transactions/{id}` | Update a transaction |
+| `DELETE` | `/api/transactions/{id}` | Delete a transaction |
+| `GET` | `/api/summary?month=2025-01` | Get monthly financial summary |
+
+---
+
+## Authentication
+
+This API uses **Bearer Token** authentication via Laravel Sanctum.
+
+**1. Register or login to receive a token:**
+```bash
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@email.com", "password": "password123"}'
+```
+
+**2. Include the token in subsequent requests:**
+```bash
+curl http://localhost:8000/api/categories \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+**3. Logout to revoke the token:**
+```bash
+curl -X POST http://localhost:8000/api/logout \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+---
+
+## Business Rules
+
+- Every user can only access their own categories and transactions — all data is scoped by `user_id`
+- Transaction `amount` is always a positive number — the `type` field (`income` or `expense`) determines the direction
+- Account balance can be negative
+- A category **cannot be deleted** if it has transactions linked to it — returns `409 Conflict`
+- Passwords are never returned in any API response
+- Login returns a token alongside the user data
+
+### Response Format
+
+**Success with body (200, 201):**
+```json
+{ "data": { ... } }
+```
+
+**Success without body (204):**
+No response body.
+
+**Client error (404, 409):**
+```json
+{ "message": "Category not found." }
+```
+
+**Validation error (422):**
+```json
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email field is required."]
+  }
+}
+```
+
+**Server error (500):**
+```json
+{ "message": "Internal server error." }
+```
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/         # Request orchestration
+│   └── Requests/            # Input validation (Form Requests)
+├── Models/                  # Eloquent models
+├── DTOs/                    # Data Transfer Objects
+├── Mappers/                 # Data transformation between layers
+├── Repositories/
+│   ├── Interfaces/          # Repository contracts
+│   └── Implementations/     # Repository implementations
+├── Providers/
+│   ├── AppServiceProvider   # Interface → Implementation bindings
+│   └── PrometheusServiceProvider  # Metrics configuration
+└── Swagger/                 # OpenAPI annotations (separated from controllers)
+
+docker/
+├── prometheus.yml           # Prometheus scrape configuration
+└── grafana/
+    ├── datasources/         # Grafana data source (Prometheus)
+    └── dashboards/          # Grafana dashboard provisioning
+```
+
+---
+
+## API Documentation
+
+The interactive API documentation is available via Swagger UI at:
+
+```
+http://localhost:8000/api/documentation
+```
+
+To regenerate the documentation after changes:
+```bash
+docker compose exec app php artisan l5-swagger:generate
+```
+
+The documentation includes all endpoints grouped by domain (Auth, Categories, Transactions, Summary), with request body schemas, parameter descriptions, and expected response codes.
+
+---
+
+## Observability
+
+### Metrics Endpoint
+
+Application metrics are exposed at:
+```
+http://localhost:8000/metrics
+```
+
+Current metrics:
+- `app_laravel_users_total` — total registered users
+- `app_laravel_categories_total` — total categories
+- `app_laravel_transactions_total` — total transactions
+
+### Prometheus
+
+Access the Prometheus query interface at:
+```
+http://localhost:9090
+```
+
+Metrics are scraped from the application every **15 seconds**.
+
+### Grafana
+
+Access the Grafana dashboard at:
+```
+http://localhost:3000
+```
+
+Default credentials: `admin` / `admin`
+
+The **Personal Finance API** dashboard is automatically provisioned under the **Laravel** folder and displays real-time counts for users, categories, and transactions.
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/your-feature`)
+3. Commit your changes following the convention below
+4. Push and open a Pull Request
 
-## Code of Conduct
+### Commit Convention
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Prefix | Usage |
+|---|---|
+| `feat:` | New feature |
+| `fix:` | Bug fix |
+| `chore:` | Configuration, setup |
+| `docs:` | Documentation |
+| `refactor:` | Code refactoring without behavior change |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Containers
 
-## License
+| Container | Service | Port |
+|---|---|---|
+| `finance_app` | Laravel Application | `8000` |
+| `finance_db` | PostgreSQL 15 | `5432` |
+| `finance_prometheus` | Prometheus | `9090` |
+| `finance_grafana` | Grafana | `3000` |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+<p align="center">Built by <a href="https://github.com/your-username">Cesar Aranha</a></p>
