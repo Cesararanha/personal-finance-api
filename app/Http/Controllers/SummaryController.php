@@ -18,32 +18,32 @@ class SummaryController extends Controller
             $userId = $request->user()->id;
             $month = $request->query('month');
 
-            if (!$month) {
+            if (! $month) {
                 return response()->json(['message' => 'Month parameter is required.'], 422);
             }
 
             $parts = explode('-', $month);
-            $year  = (int) $parts[0];
+            $year = (int) $parts[0];
             $monthNumber = (int) $parts[1];
 
             $transactions = $this->repository->findByMonth($userId, $monthNumber, $year);
 
             $income = $transactions
-                ->filter(fn($dto) => $dto->type === 'income')
-                ->sum(fn($dto) => $dto->amount);
+                ->filter(fn ($dto) => $dto->type === 'income')
+                ->sum(fn ($dto) => $dto->amount);
 
             $expense = $transactions
-                ->filter(fn($dto) => $dto->type === 'expense')
-                ->sum(fn($dto) => $dto->amount);
+                ->filter(fn ($dto) => $dto->type === 'expense')
+                ->sum(fn ($dto) => $dto->amount);
 
             $balance = $income - $expense;
 
             return response()->json([
                 'data' => [
-                    'income'  => $income,
+                    'income' => $income,
                     'expense' => $expense,
                     'balance' => $balance,
-                ]
+                ],
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Internal server error.'], 500);
