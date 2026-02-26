@@ -3,55 +3,28 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Spatie\Prometheus\Collectors\Horizon\CurrentMasterSupervisorCollector;
-use Spatie\Prometheus\Collectors\Horizon\CurrentProcessesPerQueueCollector;
-use Spatie\Prometheus\Collectors\Horizon\CurrentWorkloadCollector;
-use Spatie\Prometheus\Collectors\Horizon\FailedJobsPerHourCollector;
-use Spatie\Prometheus\Collectors\Horizon\HorizonStatusCollector;
-use Spatie\Prometheus\Collectors\Horizon\JobsPerMinuteCollector;
-use Spatie\Prometheus\Collectors\Horizon\RecentJobsCollector;
-use Spatie\Prometheus\Collectors\Queue\QueueDelayedJobsCollector;
-use Spatie\Prometheus\Collectors\Queue\QueueOldestPendingJobCollector;
-use Spatie\Prometheus\Collectors\Queue\QueuePendingJobsCollector;
-use Spatie\Prometheus\Collectors\Queue\QueueReservedJobsCollector;
-use Spatie\Prometheus\Collectors\Queue\QueueSizeCollector;
 use Spatie\Prometheus\Facades\Prometheus;
 
 class PrometheusServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
-        Prometheus::addGauge('My gauge')
+        Prometheus::addGauge('laravel_users_total')
+            ->helpText('Total de usuários cadastrados')
             ->value(function () {
-                return 123.45;
+                return \App\Models\User::count();
             });
-    }
 
-    public function registerHorizonCollectors(): self
-    {
-        Prometheus::registerCollectorClasses([
-            CurrentMasterSupervisorCollector::class,
-            CurrentProcessesPerQueueCollector::class,
-            CurrentWorkloadCollector::class,
-            FailedJobsPerHourCollector::class,
-            HorizonStatusCollector::class,
-            JobsPerMinuteCollector::class,
-            RecentJobsCollector::class,
-        ]);
+        Prometheus::addGauge('laravel_transactions_total')
+            ->helpText('Total de transações cadastradas')
+            ->value(function () {
+                return \App\Models\Transaction::count();
+            });
 
-        return $this;
-    }
-
-    public function registerQueueCollectors(array $queues = [], ?string $connection = null): self
-    {
-        Prometheus::registerCollectorClasses([
-            QueueSizeCollector::class,
-            QueuePendingJobsCollector::class,
-            QueueDelayedJobsCollector::class,
-            QueueReservedJobsCollector::class,
-            QueueOldestPendingJobCollector::class,
-        ], compact('connection', 'queues'));
-
-        return $this;
+        Prometheus::addGauge('laravel_categories_total')
+            ->helpText('Total de categorias cadastradas')
+            ->value(function () {
+                return \App\Models\Category::count();
+            });
     }
 }

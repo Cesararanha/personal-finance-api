@@ -7,7 +7,7 @@ return [
      * The urls that will return metrics.
      */
     'urls' => [
-        'default' => 'prometheus',
+        'default' => 'metrics',
     ],
 
     /*

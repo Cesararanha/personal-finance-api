@@ -1,0 +1,44 @@
+{
+  "title": "Personal Finance API",
+  "uid": "personal-finance",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total de Usuários",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 4 },
+      "targets": [
+        {
+          "expr": "app_laravel_users_total",
+          "legendFormat": "Usuários"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Total de Categorias",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 4 },
+      "targets": [
+        {
+          "expr": "app_laravel_categories_total",
+          "legendFormat": "Categorias"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Total de Transações",
+      "type": "stat",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 4 },
+      "targets": [
+        {
+          "expr": "app_laravel_transactions_total",
+          "legendFormat": "Transações"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}
