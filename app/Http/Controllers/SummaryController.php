@@ -47,7 +47,8 @@ class SummaryController extends Controller
                 ],
             ], 200);
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+            Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
             return response()->json(['message' => 'Internal server error.'], 500);
         }
     }

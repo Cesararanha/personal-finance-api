@@ -21,7 +21,7 @@ class UserMapper
                 ? $data['birth_date']
                 : Carbon::parse($data['birth_date']),
         );
-                }
+    }
 
     public static function toDTO(User $user): UserDTO
     {
