@@ -20,7 +20,7 @@ class SummaryController extends Controller
             $month = $request->query('month');
 
             if (! $month) {
-                return response()->json(['message' => 'Month parameter is required.'], 422);
+                return response()->json(['message' => 'O parâmetro mês é obrigatório.'], 422);
             }
 
             $parts = explode('-', $month);
@@ -49,7 +49,7 @@ class SummaryController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
-            return response()->json(['message' => 'Internal server error.'], 500);
+            return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
         }
     }
 }

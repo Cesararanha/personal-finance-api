@@ -38,7 +38,7 @@ class AuthController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -48,7 +48,7 @@ class AuthController extends Controller
         try {
             $validated = $request->validated();
             if (! Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
-                return response()->json(['message' => 'Invalid credentials.'], 401);
+                return response()->json(['message' => 'E-mail ou senha incorretos.'], 401);
             }
             $user = $this->userRepository->findByEmail($validated['email']);
             $userModel = User::find($user->id);
@@ -64,7 +64,7 @@ class AuthController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -79,7 +79,7 @@ class AuthController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -94,7 +94,7 @@ class AuthController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }

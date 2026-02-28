@@ -32,7 +32,7 @@ class TransactionController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -44,7 +44,7 @@ class TransactionController extends Controller
             $transaction = $this->repository->findById($id, $userId);
             if (! $transaction) {
                 return response()->json([
-                    'message' => 'Transaction not found.',
+                    'message' => 'Transação não encontrada.',
                 ], 404);
             }
             $data = TransactionMapper::toArray($transaction);
@@ -56,7 +56,7 @@ class TransactionController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -70,7 +70,7 @@ class TransactionController extends Controller
 
             if (! $this->repository->categoryExistsForUser((int) $validated['category_id'], $userId)) {
                 return response()->json([
-                    'message' => 'Category not found.',
+                    'message' => 'Categoria não encontrada.',
                 ], 404);
             }
             $dto = TransactionMapper::fromRequest($validated, $userId);
@@ -84,7 +84,7 @@ class TransactionController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -96,14 +96,14 @@ class TransactionController extends Controller
             $userId = $request->user()->id;
             if (! $this->repository->categoryExistsForUser((int) $validated['category_id'], $userId)) {
                 return response()->json([
-                    'message' => 'Category not found.',
+                    'message' => 'Categoria não encontrada.',
                 ], 404);
             }
             $dto = TransactionMapper::fromRequest($validated, $userId);
             $transaction = $this->repository->update($id, $dto);
             if (! $transaction) {
                 return response()->json([
-                    'message' => 'Transaction not found.',
+                    'message' => 'Transação não encontrada.',
                 ], 404);
             }
             $data = TransactionMapper::toArray($transaction);
@@ -115,7 +115,7 @@ class TransactionController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -128,14 +128,14 @@ class TransactionController extends Controller
             $deleted = $this->repository->delete($id, $userId);
 
             if (! $deleted) {
-                return response()->json(['message' => 'Transaction not found.'], 404);
+                return response()->json(['message' => 'Transação não encontrada.'], 404);
             }
 
             return response()->json(null, 204);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
-            return response()->json(['message' => 'Internal server error.'], 500);
+            return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
         }
     }
 }

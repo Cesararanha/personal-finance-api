@@ -31,7 +31,7 @@ class CategoryController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -43,7 +43,7 @@ class CategoryController extends Controller
             $category = $this->repository->findById($id, $userId);
             if (! $category) {
                 return response()->json([
-                    'message' => 'Category not found.',
+                    'message' => 'Categoria não encontrada.',
                 ], 404);
             }
             $data = CategoryMapper::toArray($category);
@@ -55,7 +55,7 @@ class CategoryController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -77,7 +77,7 @@ class CategoryController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -91,7 +91,7 @@ class CategoryController extends Controller
             $category = $this->repository->update($id, $dto);
             if (! $category) {
                 return response()->json([
-                    'message' => 'Category not found.',
+                    'message' => 'Categoria não encontrada.',
                 ], 404);
             }
             $data = CategoryMapper::toArray($category);
@@ -103,7 +103,7 @@ class CategoryController extends Controller
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             return response()->json([
-                'message' => 'Internal server error.',
+                'message' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }
@@ -119,20 +119,20 @@ class CategoryController extends Controller
                 ->first()?->transactions_count > 0;
 
             if ($hasTransactions) {
-                return response()->json(['message' => 'Category has transactions linked.'], 409);
+                return response()->json(['message' => 'Esta categoria possui transações vinculadas e não pode ser excluída.'], 409);
             }
 
             $deleted = $this->repository->delete($id, $userId);
 
             if (! $deleted) {
-                return response()->json(['message' => 'Category not found.'], 404);
+                return response()->json(['message' => 'Categoria não encontrada.'], 404);
             }
 
             return response()->json(null, 204);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
-            return response()->json(['message' => 'Internal server error.'], 500);
+            return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
         }
     }
 }
