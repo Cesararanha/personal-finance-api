@@ -17,6 +17,7 @@ A RESTful API for personal finance management, built with **Laravel 12**, **Post
 - [Project Structure](#project-structure)
 - [API Documentation](#api-documentation)
 - [Observability](#observability)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 
 ---
@@ -29,6 +30,7 @@ The Personal Finance API allows users to manage their personal finances through 
 - User registration and authentication via Bearer Token (Laravel Sanctum)
 - Full CRUD for income and expense categories
 - Full CRUD for financial transactions with filtering by month and category
+- Profile management — users can update their name, phone and password
 - Monthly financial summary (total income, total expenses, balance)
 - Interactive API documentation via Swagger UI
 - Real-time metrics via Prometheus + Grafana dashboard
@@ -169,19 +171,27 @@ docker compose exec db psql -U finance_user -d finance_db
 |---|---|---|
 | `POST` | `/api/logout` | Revoke the current token |
 | `GET` | `/api/me` | Get the authenticated user's data |
+| `PUT` | `/api/me` | Update name, phone or password |
 | `GET` | `/api/categories` | List all categories |
 | `POST` | `/api/categories` | Create a category |
 | `GET` | `/api/categories/{id}` | Get a category by ID |
 | `PUT` | `/api/categories/{id}` | Update a category |
 | `DELETE` | `/api/categories/{id}` | Delete a category |
 | `GET` | `/api/transactions` | List all transactions |
-| `GET` | `/api/transactions?month=2025-01` | Filter transactions by month |
-| `GET` | `/api/transactions?category_id=1` | Filter transactions by category |
 | `POST` | `/api/transactions` | Create a transaction |
 | `GET` | `/api/transactions/{id}` | Get a transaction by ID |
 | `PUT` | `/api/transactions/{id}` | Update a transaction |
 | `DELETE` | `/api/transactions/{id}` | Delete a transaction |
 | `GET` | `/api/summary?month=2025-01` | Get monthly financial summary |
+
+### Filters available on `GET /api/transactions`
+
+| Query Param | Example | Description |
+|---|---|---|
+| `month` | `?month=2025-01` | Filter by month (YYYY-MM) |
+| `category_id` | `?category_id=2` | Filter by category |
+
+Filters are combinable: `?month=2025-01&category_id=2`
 
 ---
 
@@ -216,8 +226,9 @@ curl -X POST http://localhost:8000/api/logout \
 - Transaction `amount` is always a positive number — the `type` field (`income` or `expense`) determines the direction
 - Account balance can be negative
 - A category **cannot be deleted** if it has transactions linked to it — returns `409 Conflict`
+- Sensitive data (CPF, phone, birth date) is never returned in authentication responses
 - Passwords are never returned in any API response
-- Login returns a token alongside the user data
+- Login returns a token alongside basic user data (id, name, email only)
 
 ### Response Format
 
@@ -231,23 +242,25 @@ No response body.
 
 **Client error (404, 409):**
 ```json
-{ "message": "Category not found." }
+{ "message": "Categoria não encontrada." }
 ```
 
 **Validation error (422):**
 ```json
 {
-  "message": "The given data was invalid.",
+  "message": "The name field is required.",
   "errors": {
-    "email": ["The email field is required."]
+    "name": ["The name field is required."]
   }
 }
 ```
 
 **Server error (500):**
 ```json
-{ "message": "Internal server error." }
+{ "message": "Ocorreu um erro interno. Tente novamente." }
 ```
+
+> ⚠️ The API never returns status 200 with an error body. User-facing messages are in Brazilian Portuguese.
 
 ---
 
@@ -331,6 +344,19 @@ The **Personal Finance API** dashboard is automatically provisioned under the **
 
 ---
 
+## Roadmap
+
+The following features are planned for the next version:
+
+- **Separate income entity** — income will become its own resource (`/api/incomes`), decoupled from transactions, enabling a continuous running balance model
+- **Savings ("caixinhas")** — users will be able to create named savings goals and move money between their main balance and savings
+- **Expanded transaction filters** — filter by date range, multiple categories, amount range (`min_amount`, `max_amount`) and custom sorting
+- **Summary breakdown by category** — summary response will include total spent per category with percentage
+- **Category archiving** — instead of deleting, categories can be archived and hidden from new transaction forms while remaining visible in history
+- **Soft delete** — all entities will support soft deletion for data recovery
+
+---
+
 ## Contributing
 
 1. Fork the repository
@@ -361,4 +387,4 @@ The **Personal Finance API** dashboard is automatically provisioned under the **
 
 ---
 
-<p align="center">Built by <a href="https://github.com/your-username">Cesar Aranha</a></p>
+<p align="center">Built by <a href="https://github.com/Cesararanha">Cesar Aranha</a></p>
