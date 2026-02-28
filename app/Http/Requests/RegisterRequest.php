@@ -18,8 +18,8 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8',
             'name' => 'required|string|max:255',
             'cpf' => 'required|string|size:11|unique:users,cpf',
-            'phone' => 'required|string|max:20',
-            'birth_date' => 'required|date|before:today',
+            'phone' => 'required|string|max:20|unique:users,phone',
+            'birth_date' => 'required|date_format:Y-m-d|before:today',
         ];
     }
 }
