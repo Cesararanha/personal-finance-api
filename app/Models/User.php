@@ -33,6 +33,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function monthlyIncomes(): HasMany
+    {
+        return $this->hasMany(MonthlyIncome::class);
+    }
+
+    public function savings(): HasMany
+    {
+        return $this->hasMany(Saving::class);
+    }
+
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
