@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\DTOs\TransactionDTO;
 use App\Mappers\TransactionMapper;
+use App\Models\Category;
 use App\Models\Transaction;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -83,5 +84,37 @@ class TransactionRepository implements TransactionRepositoryInterface
         }
 
         return $transaction->delete();
+    }
+
+    public function categoryExistsForUser(int $categoryId, int $userId): bool
+    {
+        return Category::query()
+            ->where('id', $categoryId)
+            ->where('user_id', $userId)
+            ->exists();
+    }
+
+    public function findFiltered(int $userId, ?string $month = null, ?int $categoryId = null): Collection
+    {
+        $query = $this->model->newQuery()
+            ->where('user_id', $userId);
+
+        if (! is_null($categoryId)) {
+            $query->where('category_id', $categoryId);
+        }
+        if (! is_null($month)) {
+            try {
+                $start = \Carbon\Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+                $end = (clone $start)->endOfMonth();
+            } catch (\Exception $e) {
+                return collect();
+            }
+        }
+
+        return $query
+            ->orderByDesc('date')
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (Transaction $transaction) => TransactionMapper::toDTO($transaction));
     }
 }

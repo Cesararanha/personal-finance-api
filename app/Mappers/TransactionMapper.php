@@ -12,7 +12,7 @@ class TransactionMapper
         return new TransactionDTO(
             id: null,
             type: $data['type'],
-            amount: $data['amount'],
+            amount: (float) abs($data['amount']),
             description: $data['description'] ?? null,
             date: \Carbon\Carbon::parse($data['date']),
             categoryId: $data['category_id'],
@@ -42,7 +42,6 @@ class TransactionMapper
             'description' => $dto->description,
             'date' => $dto->date->toDateString(),
             'category_id' => $dto->categoryId,
-            'user_id' => $dto->userId,
         ];
     }
 }

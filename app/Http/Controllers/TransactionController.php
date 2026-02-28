@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Mappers\TransactionMapper;
-use App\Models\Category;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,16 +22,7 @@ class TransactionController extends Controller
             $userId = $request->user()->id;
             $month = $request->query('month');
             $categoryId = $request->query('category_id');
-            if ($month) {
-                $parts = explode('-', $month);
-                $year = $parts[0];
-                $month = $parts[1];
-                $transactions = $this->repository->findByMonth($userId, (int) $month, (int) $year);
-            } elseif ($categoryId) {
-                $transactions = $this->repository->findByCategory((int) $categoryId, $userId);
-            } else {
-                $transactions = $this->repository->findAll($userId);
-            }
+            $transactions = $this->repository->findFiltered($userId, $month, $categoryId ? (int) $categoryId : null);
             $data = $transactions->map(fn ($dto) => TransactionMapper::toArray($dto));
 
             return response()->json([
@@ -77,10 +67,8 @@ class TransactionController extends Controller
 
             $validated = $request->validated();
             $userId = $request->user()->id;
-            $category = Category::where('id', $validated['category_id'])
-                ->where('user_id', $userId)
-                ->first();
-            if (! $category) {
+
+            if (! $this->repository->categoryExistsForUser((int) $validated['category_id'], $userId)) {
                 return response()->json([
                     'message' => 'Category not found.',
                 ], 404);
@@ -106,10 +94,7 @@ class TransactionController extends Controller
         try {
             $validated = $request->validated();
             $userId = $request->user()->id;
-            $category = Category::where('id', $validated['category_id'])
-                ->where('user_id', $userId)
-                ->first();
-            if (! $category) {
+            if (! $this->repository->categoryExistsForUser((int) $validated['category_id'], $userId)) {
                 return response()->json([
                     'message' => 'Category not found.',
                 ], 404);
