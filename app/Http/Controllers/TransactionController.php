@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -38,6 +39,7 @@ class TransactionController extends Controller
                 'data' => $data,
             ], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -60,6 +62,7 @@ class TransactionController extends Controller
                 'data' => $data,
             ], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -88,6 +91,7 @@ class TransactionController extends Controller
                 'data' => $data,
             ], 201);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -120,6 +124,7 @@ class TransactionController extends Controller
                 'data' => $data,
             ], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -139,6 +144,7 @@ class TransactionController extends Controller
 
             return response()->json(null, 204);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json(['message' => 'Internal server error.'], 500);
         }
     }

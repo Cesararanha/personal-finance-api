@@ -7,12 +7,12 @@ use App\Models\Category;
 
 class CategoryMapper
 {
-    public static function fromRequest(array $data): CategoryDTO
+    public static function fromRequest(array $data, int $userId): CategoryDTO
     {
         return new CategoryDTO(
             id: null,
             name: $data['name'],
-            userId: $data['user_id'],
+            userId: $userId,
         );
     }
 

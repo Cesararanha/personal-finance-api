@@ -13,7 +13,7 @@ class UserDTO
         public readonly ?string $password,
         public readonly string $cpf,
         public readonly string $phone,
-        public readonly Carbon $birthDate,
+        public readonly Carbon $birthDate
 
     ) {}
 }

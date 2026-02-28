@@ -10,6 +10,7 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -33,6 +34,7 @@ class AuthController extends Controller
                 ],
             ], 201);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -57,6 +59,7 @@ class AuthController extends Controller
                 ],
             ], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -70,6 +73,7 @@ class AuthController extends Controller
 
             return response()->json(null, 204);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);
@@ -83,6 +87,7 @@ class AuthController extends Controller
 
             return response()->json(['data' => UserMapper::toArray($dto)], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json([
                 'message' => 'Internal server error.',
             ], 500);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SummaryController extends Controller
 {
@@ -46,6 +47,7 @@ class SummaryController extends Controller
                 ],
             ], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
             return response()->json(['message' => 'Internal server error.'], 500);
         }
     }

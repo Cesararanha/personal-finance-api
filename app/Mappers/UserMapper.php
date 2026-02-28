@@ -4,6 +4,7 @@ namespace App\Mappers;
 
 use App\DTOs\UserDTO;
 use App\Models\User;
+use Carbon\Carbon;
 
 class UserMapper
 {
@@ -16,9 +17,11 @@ class UserMapper
             password: $data['password'],
             cpf: $data['cpf'],
             phone: $data['phone'],
-            birthDate: $data['birth_date'],
+            birthDate: $data['birth_date'] instanceof Carbon
+                ? $data['birth_date']
+                : Carbon::parse($data['birth_date']),
         );
-    }
+                }
 
     public static function toDTO(User $user): UserDTO
     {
@@ -29,7 +32,7 @@ class UserMapper
             password: null,
             cpf: $user->cpf,
             phone: $user->phone,
-            birthDate: $user->birth_date,
+            birthDate: $user->birth_date instanceof Carbon ? $user->birth_date : Carbon::parse($user->birth_date),
         );
     }
 
@@ -41,7 +44,7 @@ class UserMapper
             'email' => $dto->email,
             'cpf' => $dto->cpf,
             'phone' => $dto->phone,
-            'birth_date' => $dto->birthDate,
+            'birth_date' => $dto->birthDate->format('Y-m-d'),
         ];
     }
 }

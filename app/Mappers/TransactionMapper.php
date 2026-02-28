@@ -7,7 +7,7 @@ use App\Models\Transaction;
 
 class TransactionMapper
 {
-    public static function fromRequest(array $data): TransactionDTO
+    public static function fromRequest(array $data, int $userId): TransactionDTO
     {
         return new TransactionDTO(
             id: null,
@@ -16,7 +16,7 @@ class TransactionMapper
             description: $data['description'] ?? null,
             date: \Carbon\Carbon::parse($data['date']),
             categoryId: $data['category_id'],
-            userId: $data['user_id'],
+            userId: $userId,
         );
     }
 
@@ -27,7 +27,7 @@ class TransactionMapper
             type: $transaction->type,
             amount: $transaction->amount,
             description: $transaction->description ?? null,
-            date: $transaction->date,
+            date: $transaction->date instanceof \Carbon\Carbon ? $transaction->date : \Carbon\Carbon::parse($transaction->date),
             categoryId: $transaction->category_id,
             userId: $transaction->user_id,
         );
