@@ -42,9 +42,6 @@ class UserMapper
             'id' => $dto->id,
             'name' => $dto->name,
             'email' => $dto->email,
-            'cpf' => $dto->cpf,
-            'phone' => $dto->phone,
-            'birth_date' => $dto->birthDate->format('Y-m-d'),
         ];
     }
 }

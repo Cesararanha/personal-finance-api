@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Mappers\UserMapper;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -94,6 +95,33 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Internal server error.',
+            ], 500);
+        }
+    }
+
+    public function update(UpdateProfileRequest $request): JsonResponse
+    {
+        try {
+            $validated = $request->validated();
+            $user = $request->user();
+            if (isset($validated['password'])) {
+                if (! password_verify($validated['password'], $user->password)) {
+                    return response()->json(['message' => 'Senha atual incorreta.'], 400);
+                }
+                $validated['password'] = $validated['new_password'];
+            }
+
+            unset($validated['new_password']);
+            $user->update($validated);
+
+            $dto = UserMapper::toDTO($user->fresh());
+
+            return response()->json(['data' => UserMapper::toArray($dto)], 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
+            return response()->json([
+                'message' => 'Ocorreu um erro interno.',
             ], 500);
         }
     }

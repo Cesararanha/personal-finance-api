@@ -106,6 +106,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             try {
                 $start = \Carbon\Carbon::createFromFormat('Y-m', $month)->startOfMonth();
                 $end = (clone $start)->endOfMonth();
+                $query->whereBetween('date', [$start, $end]);
             } catch (\Exception $e) {
                 return collect();
             }
