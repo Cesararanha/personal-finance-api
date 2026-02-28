@@ -128,7 +128,9 @@ class CategoryController extends Controller
                 return response()->json(['message' => 'Categoria não encontrada.'], 404);
             }
 
-            return response()->json(null, 204);
+            return response()->json([
+                'message' => 'Categoria excluída com sucesso.',
+            ], 204);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 

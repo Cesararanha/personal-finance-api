@@ -74,7 +74,9 @@ class AuthController extends Controller
         try {
             $request->user()->currentAccessToken()->delete();
 
-            return response()->json(null, 204);
+            return response()->json([
+                'message' => 'Logout realizado com sucesso.',
+            ], 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 

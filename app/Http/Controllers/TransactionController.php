@@ -131,7 +131,9 @@ class TransactionController extends Controller
                 return response()->json(['message' => 'Transação não encontrada.'], 404);
             }
 
-            return response()->json(null, 204);
+            return response()->json([
+                'message' => 'Transação excluída com sucesso.',
+            ], 204);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
