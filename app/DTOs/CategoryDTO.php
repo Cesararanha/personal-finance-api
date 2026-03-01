@@ -8,6 +8,6 @@ class CategoryDTO
         public readonly ?int $id,
         public readonly string $name,
         public readonly int $userId,
-        public readonly bool $is_active = true,
+        public readonly bool $isActive = true,
     ) {}
 }

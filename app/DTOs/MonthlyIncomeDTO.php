@@ -11,6 +11,6 @@ class MonthlyIncomeDTO
         public readonly int $userId,
         public readonly float $amount,
         public readonly ?string $description,
-        public readonly Carbon $received_at,
+        public readonly Carbon $receivedAt,
     ) {}
 }

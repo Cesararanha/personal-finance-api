@@ -28,6 +28,6 @@ class Saving extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(SavingTransaction::class, 'savings_id');
     }
 }

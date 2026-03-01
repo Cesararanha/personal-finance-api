@@ -4,7 +4,7 @@ namespace App\DTOs;
 
 use Carbon\Carbon;
 
-class SabuntransactionDTO
+class SavingTransactionDTO
 {
     public function __construct(
         public readonly ?int $id,
