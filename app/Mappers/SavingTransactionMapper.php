@@ -39,12 +39,12 @@ class SavingTransactionMapper
     public static function toArray(SavingTransactionDTO $dto): array
     {
         return [
-            'id'          => $dto->id,
-            'savings_id'  => $dto->savingsId,
-            'type'        => $dto->type,
-            'amount'      => $dto->amount,
+            'id' => $dto->id,
+            'savings_id' => $dto->savingsId,
+            'type' => $dto->type,
+            'amount' => $dto->amount,
             'description' => $dto->description,
-            'date'        => $dto->date->format('Y-m-d'),
+            'date' => $dto->date->format('Y-m-d'),
         ];
     }
 }

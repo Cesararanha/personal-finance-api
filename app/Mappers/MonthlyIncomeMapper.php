@@ -35,8 +35,8 @@ class MonthlyIncomeMapper
     public static function toArray(MonthlyIncomeDTO $dto): array
     {
         return [
-            'id'          => $dto->id,
-            'amount'      => $dto->amount,
+            'id' => $dto->id,
+            'amount' => $dto->amount,
             'description' => $dto->description,
             'received_at' => $dto->receivedAt->format('Y-m-d'),
         ];

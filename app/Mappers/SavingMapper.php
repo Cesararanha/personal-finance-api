@@ -34,11 +34,11 @@ class SavingMapper
     public static function toArray(SavingDTO $dto): array
     {
         return [
-            'id'          => $dto->id,
-            'name'        => $dto->name,
+            'id' => $dto->id,
+            'name' => $dto->name,
             'description' => $dto->description,
             'goal_amount' => $dto->goalAmount,
-            'balance'     => $dto->balance,
+            'balance' => $dto->balance,
         ];
     }
 }
