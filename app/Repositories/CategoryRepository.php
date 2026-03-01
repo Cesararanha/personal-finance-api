@@ -12,9 +12,15 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function __construct(private readonly Category $model) {}
 
-    public function findAll(int $userId): Collection
+    public function findAll(int $userId, bool $includeArchived = false): Collection
     {
-        return $this->model->where('user_id', $userId)->get()->map(fn (Category $category) => CategoryMapper::toDTO($category));
+        $query = $this->model->where('user_id', $userId);
+
+        if (! $includeArchived) {
+            $query->where('is_active', true);
+        }
+
+        return $query->get()->map(fn (Category $c) => CategoryMapper::toDTO($c));
     }
 
     public function findById(int $id, int $userId): ?CategoryDTO
@@ -29,6 +35,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category = $this->model->create([
             'name' => $dto->name,
             'user_id' => $dto->userId,
+            'is_active' => $dto->isActive,
         ]);
 
         return CategoryMapper::toDTO($category);
@@ -41,9 +48,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             return null;
         }
 
-        $category->update([
-            'name' => $dto->name,
-        ]);
+        $category->update(['name' => $dto->name]);
 
         return CategoryMapper::toDTO($category->fresh());
     }
@@ -56,5 +61,16 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category->delete();
+    }
+
+    public function archive(int $id, int $userId): bool
+    {
+        $category = $this->model->where('id', $id)->where('user_id', $userId)->first();
+        if (! $category) {
+            return false;
+        }
+        $category->update(['is_active' => false]);
+
+        return true;
     }
 }
