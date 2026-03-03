@@ -183,6 +183,8 @@ class SavingController extends Controller
             );
 
             return response()->json(['data' => SavingMapper::toArray($updated)], 200);
+        } catch (\RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 

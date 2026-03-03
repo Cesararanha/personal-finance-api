@@ -9,6 +9,7 @@ use App\Models\Saving;
 use App\Models\SavingTransaction;
 use App\Repositories\Interfaces\SavingRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SavingRepository implements SavingRepositoryInterface
 {
@@ -71,38 +72,46 @@ class SavingRepository implements SavingRepositoryInterface
 
     public function deposit(int $id, int $userId, float $amount, ?string $description, string $date): SavingDTO
     {
-        $saving = $this->model->where('id', $id)->where('user_id', $userId)->firstOrFail();
+        return DB::transaction(function () use ($id, $userId, $amount, $description, $date) {
+            $saving = $this->model->where('id', $id)->where('user_id', $userId)->firstOrFail();
 
-        $saving->increment('balance', $amount);
+            $saving->increment('balance', $amount);
 
-        $this->transactionModel->create([
-            'savings_id' => $saving->id,
-            'user_id' => $userId,
-            'type' => 'deposit',
-            'amount' => $amount,
-            'description' => $description,
-            'date' => $date,
-        ]);
+            $this->transactionModel->create([
+                'savings_id' => $saving->id,
+                'user_id' => $userId,
+                'type' => 'deposit',
+                'amount' => $amount,
+                'description' => $description,
+                'date' => $date,
+            ]);
 
-        return SavingMapper::toDTO($saving->fresh());
+            return SavingMapper::toDTO($saving->fresh());
+        });
     }
 
     public function withdraw(int $id, int $userId, float $amount, ?string $description, string $date): SavingDTO
     {
-        $saving = $this->model->where('id', $id)->where('user_id', $userId)->firstOrFail();
+        return DB::transaction(function () use ($id, $userId, $amount, $description, $date) {
+            $saving = $this->model->where('id', $id)->where('user_id', $userId)->firstOrFail();
 
-        $saving->decrement('balance', $amount);
+            if ($saving->balance < $amount) {
+                throw new \RuntimeException('Saldo insuficiente. Saldo disponível: R$ '.number_format($saving->balance, 2, ',', '.').'.');
+            }
 
-        $this->transactionModel->create([
-            'savings_id' => $saving->id,
-            'user_id' => $userId,
-            'type' => 'withdraw',
-            'amount' => $amount,
-            'description' => $description,
-            'date' => $date,
-        ]);
+            $saving->decrement('balance', $amount);
 
-        return SavingMapper::toDTO($saving->fresh());
+            $this->transactionModel->create([
+                'savings_id' => $saving->id,
+                'user_id' => $userId,
+                'type' => 'withdraw',
+                'amount' => $amount,
+                'description' => $description,
+                'date' => $date,
+            ]);
+
+            return SavingMapper::toDTO($saving->fresh());
+        });
     }
 
     public function getHistory(int $id, int $userId): Collection
