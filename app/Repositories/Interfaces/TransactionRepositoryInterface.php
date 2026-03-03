@@ -17,7 +17,17 @@ interface TransactionRepositoryInterface
 
     public function categoryExistsForUser(int $categoryId, int $userId): bool;
 
-    public function findFiltered(int $userId, ?string $month = null, ?int $categoryId = null): Collection;
+    public function findFiltered(
+        int $userId,
+        ?string $month = null,
+        ?int $categoryId = null,
+        ?string $startDate = null,
+        ?string $endDate = null,
+        ?float $minAmount = null,
+        ?float $maxAmount = null,
+        string $sortBy = 'date',
+        string $order = 'desc'
+    ): Collection;
 
     public function create(TransactionDTO $dto): TransactionDTO;
 

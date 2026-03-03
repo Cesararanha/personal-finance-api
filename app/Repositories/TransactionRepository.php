@@ -94,14 +94,25 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->exists();
     }
 
-    public function findFiltered(int $userId, ?string $month = null, ?int $categoryId = null): Collection
-    {
+    public function findFiltered(
+        int $userId,
+        ?string $month = null,
+        ?int $categoryId = null,
+        ?string $startDate = null,
+        ?string $endDate = null,
+        ?float $minAmount = null,
+        ?float $maxAmount = null,
+        string $sortBy = 'date',
+        string $order = 'desc'
+    ): Collection {
         $query = $this->model->newQuery()
+            ->with('category')
             ->where('user_id', $userId);
 
         if (! is_null($categoryId)) {
             $query->where('category_id', $categoryId);
         }
+
         if (! is_null($month)) {
             try {
                 $start = \Carbon\Carbon::createFromFormat('Y-m', $month)->startOfMonth();
@@ -112,8 +123,24 @@ class TransactionRepository implements TransactionRepositoryInterface
             }
         }
 
+        if (! is_null($startDate) && ! is_null($endDate)) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        if (! is_null($minAmount)) {
+            $query->where('amount', '>=', $minAmount);
+        }
+
+        if (! is_null($maxAmount)) {
+            $query->where('amount', '<=', $maxAmount);
+        }
+
+        $allowedSort = ['date', 'amount', 'description'];
+        $sortBy = in_array($sortBy, $allowedSort) ? $sortBy : 'date';
+        $order = in_array($order, ['asc', 'desc']) ? $order : 'desc';
+
         return $query
-            ->orderByDesc('date')
+            ->orderBy($sortBy, $order)
             ->orderByDesc('id')
             ->get()
             ->map(fn (Transaction $transaction) => TransactionMapper::toDTO($transaction));
