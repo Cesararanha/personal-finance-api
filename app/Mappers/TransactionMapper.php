@@ -30,6 +30,7 @@ class TransactionMapper
             date: $transaction->date instanceof \Carbon\Carbon ? $transaction->date : \Carbon\Carbon::parse($transaction->date),
             categoryId: $transaction->category_id,
             userId: $transaction->user_id,
+            categoryName: $transaction->category?->name,
         );
     }
 

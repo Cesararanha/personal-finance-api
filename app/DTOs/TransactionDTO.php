@@ -14,5 +14,6 @@ class TransactionDTO
         public readonly Carbon $date,
         public readonly int $categoryId,
         public readonly int $userId,
+        public readonly ?string $categoryName = null,
     ) {}
 }
