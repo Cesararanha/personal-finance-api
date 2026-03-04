@@ -32,8 +32,7 @@ class CategoryMapper
         return [
             'id' => $dto->id,
             'name' => $dto->name,
-            'user_id' => $dto->userId,
-            'is_active' => $dto->isActive,
+            'is_active' => (bool) $dto->isActive,
         ];
     }
 }

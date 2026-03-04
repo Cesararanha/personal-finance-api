@@ -21,7 +21,7 @@ class CategoryController extends Controller
     {
         try {
             $userId = $request->user()->id;
-            $includeArchived = $request->query('include_archived', 'false') === 'true';
+            $includeArchived = $request->query('archived') === 'true';
             $categories = $this->repository->findAll($userId, $includeArchived);
             $data = $categories->map(fn ($dto) => CategoryMapper::toArray($dto));
 
