@@ -11,11 +11,11 @@ class MonthlyIncome extends Model
         'user_id',
         'amount',
         'description',
-        'recived_at',
+        'received_at',
     ];
 
     protected $casts = [
-        'recived_at' => 'date',
+        'received_at' => 'date',
         'amount' => 'float',
     ];
 
