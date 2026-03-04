@@ -112,7 +112,7 @@ class CategorySwagger
      *         @OA\Schema(type="integer")
      *     ),
      *
-     *     @OA\Response(response=204, description="Categoria deletada com sucesso"),
+     *     @OA\Response(response=200, description="Categoria deletada com sucesso"),
      *     @OA\Response(response=404, description="Categoria não encontrada"),
      *     @OA\Response(response=409, description="Categoria possui transações vinculadas"),
      *     @OA\Response(response=500, description="Erro interno do servidor")

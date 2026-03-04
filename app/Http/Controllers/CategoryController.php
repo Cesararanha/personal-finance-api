@@ -152,6 +152,7 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Categoria arquivada com sucesso.'], 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
             return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
         }
     }

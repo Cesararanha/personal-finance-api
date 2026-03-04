@@ -63,7 +63,7 @@ class AuthSwagger
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
      *
-     *     @OA\Response(response=204, description="Logout realizado com sucesso"),
+     *     @OA\Response(response=200, description="Logout realizado com sucesso"),
      *     @OA\Response(response=401, description="Não autenticado"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )

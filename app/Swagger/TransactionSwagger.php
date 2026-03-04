@@ -137,7 +137,7 @@ class TransactionSwagger
      *         @OA\Schema(type="integer")
      *     ),
      *
-     *     @OA\Response(response=204, description="Transação deletada com sucesso"),
+     *     @OA\Response(response=200, description="Transação deletada com sucesso"),
      *     @OA\Response(response=404, description="Transação não encontrada"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )
