@@ -61,6 +61,7 @@ class IncomeSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *

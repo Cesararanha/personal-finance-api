@@ -30,6 +30,7 @@ class AuthSwagger
      *         description="Usuário criado com sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="token", type="string", example="1|abc123"),
      *                 @OA\Property(property="user", type="object",
@@ -40,6 +41,7 @@ class AuthSwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=422, description="Dados inválidos"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )
@@ -68,6 +70,7 @@ class AuthSwagger
      *         description="Login realizado com sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="token", type="string", example="1|abc123"),
      *                 @OA\Property(property="user", type="object",
@@ -78,6 +81,7 @@ class AuthSwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=401, description="E-mail ou senha incorretos"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )
@@ -110,6 +114,7 @@ class AuthSwagger
      *         description="Sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="name", type="string", example="João Silva"),
@@ -117,6 +122,7 @@ class AuthSwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=401, description="Não autenticado"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )
@@ -134,6 +140,7 @@ class AuthSwagger
      *         required=true,
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="name", type="string", example="João Atualizado"),
      *             @OA\Property(property="phone", type="string", example="11988888888"),
      *             @OA\Property(property="password", type="string", example="senhaAtual"),

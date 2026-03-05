@@ -12,27 +12,42 @@ class TransactionSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="month", in="query", required=false,
+     *
      *         @OA\Schema(type="string", example="2025-01")
      *     ),
+     *
      *     @OA\Parameter(name="category_id", in="query", required=false,
+     *
      *         @OA\Schema(type="integer", example=1)
      *     ),
+     *
      *     @OA\Parameter(name="start_date", in="query", required=false,
+     *
      *         @OA\Schema(type="string", example="2025-01-01")
      *     ),
+     *
      *     @OA\Parameter(name="end_date", in="query", required=false,
+     *
      *         @OA\Schema(type="string", example="2025-01-31")
      *     ),
+     *
      *     @OA\Parameter(name="min_amount", in="query", required=false,
+     *
      *         @OA\Schema(type="number", example=50.00)
      *     ),
+     *
      *     @OA\Parameter(name="max_amount", in="query", required=false,
+     *
      *         @OA\Schema(type="number", example=500.00)
      *     ),
+     *
      *     @OA\Parameter(name="sort_by", in="query", required=false,
+     *
      *         @OA\Schema(type="string", enum={"date","amount","description"}, example="date")
      *     ),
+     *
      *     @OA\Parameter(name="order", in="query", required=false,
+     *
      *         @OA\Schema(type="string", enum={"asc","desc"}, example="desc")
      *     ),
      *
@@ -51,6 +66,7 @@ class TransactionSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -98,6 +114,7 @@ class TransactionSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -105,6 +122,7 @@ class TransactionSwagger
      *         required=true,
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="type", type="string", enum={"expense"}, example="expense"),
      *             @OA\Property(property="amount", type="number", example=200.00),
      *             @OA\Property(property="description", type="string", example="Mercado e Feira"),
@@ -129,6 +147,7 @@ class TransactionSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *

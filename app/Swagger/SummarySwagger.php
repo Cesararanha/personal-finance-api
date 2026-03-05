@@ -25,6 +25,7 @@ class SummarySwagger
      *         description="Sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="period", type="string", example="2025-01"),
      *                 @OA\Property(property="total_income", type="number", example=5000.00),
@@ -33,7 +34,9 @@ class SummarySwagger
      *                 @OA\Property(property="savings_balance", type="number", example=500.00),
      *                 @OA\Property(property="available_balance", type="number", example=3000.00),
      *                 @OA\Property(property="by_category", type="array",
+     *
      *                     @OA\Items(
+     *
      *                         @OA\Property(property="category", type="string", example="Alimentação"),
      *                         @OA\Property(property="total", type="number", example=800.00),
      *                         @OA\Property(property="percentage", type="number", example=53.3),
@@ -43,6 +46,7 @@ class SummarySwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=422, description="Parâmetro month obrigatório"),
      *     @OA\Response(response=401, description="Não autenticado"),
      *     @OA\Response(response=500, description="Erro interno do servidor")

@@ -25,8 +25,11 @@ class CategorySwagger
      *         description="Sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="name", type="string", example="Alimentação"),
      *                     @OA\Property(property="is_active", type="boolean", example=true)
@@ -34,6 +37,7 @@ class CategorySwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=401, description="Não autenticado"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )

@@ -26,6 +26,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -70,6 +71,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -77,6 +79,7 @@ class SavingSwagger
      *         required=true,
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="name", type="string", example="Reserva Atualizada"),
      *             @OA\Property(property="description", type="string", example="Nova descrição"),
      *             @OA\Property(property="goal_amount", type="number", example=15000.00)
@@ -99,6 +102,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -118,6 +122,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -148,6 +153,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -179,6 +185,7 @@ class SavingSwagger
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(name="id", in="path", required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
      *
@@ -187,8 +194,11 @@ class SavingSwagger
      *         description="Sucesso",
      *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="data", type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="savings_id", type="integer", example=1),
      *                     @OA\Property(property="type", type="string", enum={"deposit","withdraw"}, example="deposit"),
@@ -199,6 +209,7 @@ class SavingSwagger
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=404, description="Caixinha não encontrada"),
      *     @OA\Response(response=500, description="Erro interno do servidor")
      * )
