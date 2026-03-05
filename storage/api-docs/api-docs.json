@@ -59,7 +59,42 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usuário criado com sucesso"
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "João Silva"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "joao@email.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Dados inválidos"
@@ -103,10 +138,45 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login realizado com sucesso"
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "João Silva"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "joao@email.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Credenciais inválidas"
+                        "description": "E-mail ou senha incorretos"
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -148,10 +218,94 @@
                 "operationId": "f3784ad959b8f67b7c37eadc99a5839a",
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "joao@email.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Não autenticado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Atualiza perfil do usuário autenticado",
+                "operationId": "1aa65a406c0b209df28939fa8854d95e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "João Atualizado"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "11988888888"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "senhaAtual"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "novaSenha123"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "example": "novaSenha123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil atualizado com sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -171,9 +325,54 @@
                 ],
                 "summary": "Lista todas as categorias do usuário",
                 "operationId": "5db9df8dff770a41821df33d4c89fb65",
+                "parameters": [
+                    {
+                        "name": "archived",
+                        "in": "query",
+                        "description": "Se true, inclui categorias arquivadas",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "true",
+                                "false"
+                            ],
+                            "example": "true"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Alimentação"
+                                                    },
+                                                    "is_active": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Não autenticado"
@@ -324,7 +523,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Deleta uma categoria",
+                "summary": "Deleta uma categoria sem transações",
                 "operationId": "18576835d0c9e804187f1daa542ae3ee",
                 "parameters": [
                     {
@@ -337,14 +536,587 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Categoria deletada com sucesso"
+                    "200": {
+                        "description": "Categoria excluída com sucesso"
                     },
                     "404": {
                         "description": "Categoria não encontrada"
                     },
                     "409": {
                         "description": "Categoria possui transações vinculadas"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}/archive": {
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Arquiva uma categoria (is_active = false)",
+                "operationId": "f412ab48a01f6f367c082c84b4ebcbfb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria arquivada com sucesso"
+                    },
+                    "404": {
+                        "description": "Categoria não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/incomes": {
+            "get": {
+                "tags": [
+                    "Incomes"
+                ],
+                "summary": "Lista as receitas do usuário",
+                "operationId": "a758b0bc04a435ea67972386959f40f5",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "description": "Filtra por mês no formato YYYY-MM",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2025-01"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Incomes"
+                ],
+                "summary": "Registra uma nova receita",
+                "operationId": "cce5997731b5392c135514303b3bb290",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "received_at"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 5000
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Salário Janeiro"
+                                    },
+                                    "received_at": {
+                                        "type": "string",
+                                        "example": "2025-01-05"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Receita registrada com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/incomes/{id}": {
+            "delete": {
+                "tags": [
+                    "Incomes"
+                ],
+                "summary": "Remove uma receita",
+                "operationId": "332d0e722c3a3a8710ef2f7e4e33c3b4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receita excluída com sucesso"
+                    },
+                    "404": {
+                        "description": "Receita não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/savings": {
+            "get": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Lista todas as caixinhas do usuário",
+                "operationId": "b13f1be8c59f13292c99135a09a4bbc5",
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "401": {
+                        "description": "Não autenticado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Cria uma nova caixinha",
+                "operationId": "ead75b5cffb8122c36a2079dca60e597",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Reserva de Emergência"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "6 meses de despesas"
+                                    },
+                                    "goal_amount": {
+                                        "type": "number",
+                                        "example": 10000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Caixinha criada com sucesso"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/savings/{id}": {
+            "get": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Busca uma caixinha por ID",
+                "operationId": "062cd36fd947fb30a37f6205d9186c42",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso"
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Atualiza uma caixinha",
+                "operationId": "aad6238d531cc956f646a6f8f439b870",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Reserva Atualizada"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Nova descrição"
+                                    },
+                                    "goal_amount": {
+                                        "type": "number",
+                                        "example": 15000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Caixinha atualizada com sucesso"
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Deleta uma caixinha com saldo zero",
+                "operationId": "ab04fc76a76bd154fe92160dbdee5334",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Caixinha excluída com sucesso"
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
+                    },
+                    "409": {
+                        "description": "Caixinha possui saldo e não pode ser excluída"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/savings/{id}/deposit": {
+            "post": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Deposita um valor na caixinha",
+                "operationId": "8cef2f27d3f273b7a9a5118dd9ec7548",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 500
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Primeiro depósito"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "example": "2025-01-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Depósito realizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/savings/{id}/withdraw": {
+            "post": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Retira um valor da caixinha",
+                "operationId": "c134af090079f2db551a3a9e0d3b1199",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 100
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Retirada parcial"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "example": "2025-01-20"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Retirada realizada com sucesso"
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
+                    },
+                    "422": {
+                        "description": "Saldo insuficiente"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/savings/{id}/history": {
+            "get": {
+                "tags": [
+                    "Savings"
+                ],
+                "summary": "Retorna o histórico de movimentações da caixinha",
+                "operationId": "1ddacee4ad96328593d586af91011328",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "savings_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "deposit",
+                                                            "withdraw"
+                                                        ],
+                                                        "example": "deposit"
+                                                    },
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "example": 500
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Primeiro depósito"
+                                                    },
+                                                    "date": {
+                                                        "type": "string",
+                                                        "example": "2025-01-10"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Caixinha não encontrada"
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -368,6 +1140,7 @@
                     {
                         "name": "month",
                         "in": "query",
+                        "description": "Mês no formato YYYY-MM",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -377,7 +1150,69 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "period": {
+                                                    "type": "string",
+                                                    "example": "2025-01"
+                                                },
+                                                "total_income": {
+                                                    "type": "number",
+                                                    "example": 5000
+                                                },
+                                                "total_expenses": {
+                                                    "type": "number",
+                                                    "example": 1500
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 3500
+                                                },
+                                                "savings_balance": {
+                                                    "type": "number",
+                                                    "example": 500
+                                                },
+                                                "available_balance": {
+                                                    "type": "number",
+                                                    "example": 3000
+                                                },
+                                                "by_category": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "category": {
+                                                                "type": "string",
+                                                                "example": "Alimentação"
+                                                            },
+                                                            "total": {
+                                                                "type": "number",
+                                                                "example": 800
+                                                            },
+                                                            "percentage": {
+                                                                "type": "number",
+                                                                "example": 53.3
+                                                            },
+                                                            "transactions_count": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
                         "description": "Parâmetro month obrigatório"
@@ -401,7 +1236,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Lista todas as transações do usuário",
+                "summary": "Lista transações com filtros",
                 "operationId": "98f74ffcb5cbd354fe2e8ef58bec78d8",
                 "parameters": [
                     {
@@ -420,6 +1255,69 @@
                         "schema": {
                             "type": "integer",
                             "example": 1
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2025-01-31"
+                        }
+                    },
+                    {
+                        "name": "min_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "example": 50
+                        }
+                    },
+                    {
+                        "name": "max_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "example": 500
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "date",
+                                "amount",
+                                "description"
+                            ],
+                            "example": "date"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "example": "desc"
                         }
                     }
                 ],
@@ -461,22 +1359,21 @@
                                     "type": {
                                         "type": "string",
                                         "enum": [
-                                            "income",
                                             "expense"
                                         ],
-                                        "example": "income"
+                                        "example": "expense"
                                     },
                                     "amount": {
                                         "type": "number",
-                                        "example": 100.5
+                                        "example": 150
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Salário"
+                                        "example": "Mercado"
                                     },
                                     "date": {
                                         "type": "string",
-                                        "example": "2025-01-01"
+                                        "example": "2025-01-15"
                                     },
                                     "category_id": {
                                         "type": "integer",
@@ -496,7 +1393,7 @@
                         "description": "Categoria não encontrada"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Dados inválidos ou categoria arquivada"
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -547,7 +1444,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Atualiza uma transação",
+                "summary": "Atualiza uma transação (suporta update parcial)",
                 "operationId": "5b006bbfed7fc534752eec49d3633dde",
                 "parameters": [
                     {
@@ -564,28 +1461,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "type",
-                                    "amount",
-                                    "date",
-                                    "category_id"
-                                ],
                                 "properties": {
                                     "type": {
                                         "type": "string",
                                         "enum": [
-                                            "income",
                                             "expense"
                                         ],
                                         "example": "expense"
                                     },
                                     "amount": {
                                         "type": "number",
-                                        "example": 50
+                                        "example": 200
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Mercado"
+                                        "example": "Mercado e Feira"
                                     },
                                     "date": {
                                         "type": "string",
@@ -638,8 +1528,8 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Transação deletada com sucesso"
+                    "200": {
+                        "description": "Transação excluída com sucesso"
                     },
                     "404": {
                         "description": "Transação não encontrada"
@@ -660,7 +1550,6 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
-                "bearerFormat": "JWT",
                 "scheme": "bearer"
             }
         }
@@ -673,6 +1562,14 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Incomes",
+            "description": "Incomes"
+        },
+        {
+            "name": "Savings",
+            "description": "Savings"
         },
         {
             "name": "Summary",
