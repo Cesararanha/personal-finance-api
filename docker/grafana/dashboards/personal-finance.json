@@ -1,0 +1,341 @@
+{
+  "title": "Personal Finance API",
+  "uid": "personal-finance",
+  "schemaVersion": 36,
+  "version": 2,
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "👥 Usuários Cadastrados",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_users_total",
+          "legendFormat": "Usuários"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "💸 Total de Transações",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "orange" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_transactions_total",
+          "legendFormat": "Transações"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "💰 Total de Receitas",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_incomes_total",
+          "legendFormat": "Receitas"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "🏦 Total de Caixinhas",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "purple" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "purple", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_savings_total",
+          "legendFormat": "Caixinhas"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "📂 Categorias Ativas",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 4, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_categories_active_total",
+          "legendFormat": "Ativas"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "🗃️ Categorias Arquivadas",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 4, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "yellow" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_categories_archived_total",
+          "legendFormat": "Arquivadas"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "📊 Total de Categorias",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 4, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_categories_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "📈 Valor Médio por Transação (R$)",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 4, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyBRL",
+          "color": { "mode": "fixed", "fixedColor": "orange" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_transactions_avg_amount",
+          "legendFormat": "Média"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "💵 Soma Total de Receitas (R$)",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 8, "w": 8, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyBRL",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_incomes_amount_total",
+          "legendFormat": "Total Receitas"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "🏦 Saldo Total nas Caixinhas (R$)",
+      "type": "stat",
+      "gridPos": { "x": 8, "y": 8, "w": 8, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyBRL",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 1000 },
+              { "color": "super-light-green", "value": 10000 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_savings_balance_total",
+          "legendFormat": "Saldo Caixinhas"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "⚖️ Categorias Ativas vs Arquivadas",
+      "type": "piechart",
+      "gridPos": { "x": 16, "y": 8, "w": 8, "h": 8 },
+      "options": {
+        "pieType": "donut",
+        "displayLabels": ["name", "percent"]
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_categories_active_total",
+          "legendFormat": "Ativas"
+        },
+        {
+          "expr": "app_laravel_categories_archived_total",
+          "legendFormat": "Arquivadas"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "📋 Resumo Geral da Plataforma",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 12, "w": 16, "h": 8 },
+      "options": {
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_users_total",
+          "legendFormat": "Usuários"
+        },
+        {
+          "expr": "app_laravel_transactions_total",
+          "legendFormat": "Transações"
+        },
+        {
+          "expr": "app_laravel_incomes_total",
+          "legendFormat": "Receitas"
+        },
+        {
+          "expr": "app_laravel_savings_total",
+          "legendFormat": "Caixinhas"
+        },
+        {
+          "expr": "app_laravel_categories_active_total",
+          "legendFormat": "Categorias Ativas"
+        },
+        {
+          "expr": "app_laravel_savings_balance_total",
+          "legendFormat": "Saldo em Caixinhas (R$)"
+        }
+      ]
+    }
+  ]
+}

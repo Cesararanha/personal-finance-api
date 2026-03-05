@@ -21,7 +21,8 @@ class CategoryController extends Controller
     {
         try {
             $userId = $request->user()->id;
-            $categories = $this->repository->findAll($userId);
+            $includeArchived = $request->query('archived') === 'true';
+            $categories = $this->repository->findAll($userId, $includeArchived);
             $data = $categories->map(fn ($dto) => CategoryMapper::toArray($dto));
 
             return response()->json([
@@ -130,7 +131,25 @@ class CategoryController extends Controller
 
             return response()->json([
                 'message' => 'Categoria excluída com sucesso.',
-            ], 204);
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
+            return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
+        }
+    }
+
+    public function archive(Request $request, int $id): JsonResponse
+    {
+        try {
+            $userId = $request->user()->id;
+            $archived = $this->repository->archive($id, $userId);
+
+            if (! $archived) {
+                return response()->json(['message' => 'Categoria não encontrada.'], 404);
+            }
+
+            return response()->json(['message' => 'Categoria arquivada com sucesso.'], 200);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 

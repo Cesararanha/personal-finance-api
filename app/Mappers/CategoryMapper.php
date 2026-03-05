@@ -13,6 +13,7 @@ class CategoryMapper
             id: null,
             name: $data['name'],
             userId: $userId,
+            isActive: true,
         );
     }
 
@@ -22,6 +23,7 @@ class CategoryMapper
             id: $category->id,
             name: $category->name,
             userId: $category->user_id,
+            isActive: $category->is_active,
         );
     }
 
@@ -30,7 +32,7 @@ class CategoryMapper
         return [
             'id' => $dto->id,
             'name' => $dto->name,
-            'user_id' => $dto->userId,
+            'is_active' => (bool) $dto->isActive,
         ];
     }
 }

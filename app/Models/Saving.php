@@ -6,22 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Saving extends Model
 {
     protected $fillable = [
-        'name',
         'user_id',
-        'is_active',
+        'name',
+        'description',
+        'goal_amount',
+        'balance',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'goal_amount' => 'float',
+        'balance' => 'float',
     ];
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
 
     public function user(): BelongsTo
     {
@@ -30,6 +28,6 @@ class Category extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(SavingTransaction::class, 'savings_id');
     }
 }

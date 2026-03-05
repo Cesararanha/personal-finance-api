@@ -16,4 +16,6 @@ interface CategoryRepositoryInterface
     public function update(int $id, CategoryDTO $dto): ?CategoryDTO;
 
     public function delete(int $id, int $userId): bool;
+
+    public function archive(int $id, int $userId): bool;
 }

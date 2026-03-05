@@ -17,8 +17,8 @@ class UpdateTransactionRequest extends FormRequest
             'type' => 'sometimes|required|in:income,expense',
             'amount' => 'sometimes|required|numeric|min:0.01',
             'description' => 'nullable|string|max:255',
-            'date' => 'sometimes|required|date',
-            'category_id' => 'sometimes|required|exists:categories,id',
+            'date' => 'sometimes|required|date_format:Y-m-d',
+            'category_id' => 'sometimes|required|integer|exists:categories,id',
         ];
     }
 }

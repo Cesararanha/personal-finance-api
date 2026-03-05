@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransactionRequest extends FormRequest
+class StoreSavingRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,11 +14,9 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'required|in:income,expense',
-            'amount' => 'required|numeric|min:0.01',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'date' => 'required|date_format:Y-m-d',
-            'category_id' => 'required|integer|exists:categories,id',
+            'goal_amount' => 'nullable|numeric|min:0.01',
         ];
     }
 }
