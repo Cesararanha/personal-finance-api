@@ -19,8 +19,8 @@ class UpdateProfileRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'phone' => 'sometimes|required|string|max:20|unique:users,phone,'.$userId,
-            'password' => ['sometimes', 'required', Password::min(8)],
-            'new_password' => ['sometimes', 'required', Password::min(8), 'confirmed'],
+            'password' => ['sometimes', 'required', 'string'],
+            'new_password' => ['required_with:password', Password::min(8), 'confirmed'],
         ];
     }
 }

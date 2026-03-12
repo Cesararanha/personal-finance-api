@@ -16,6 +16,11 @@ class Transaction extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+        'amount' => 'float',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

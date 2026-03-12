@@ -11,7 +11,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Registra um novo usuário",
+                "summary": "Register a new user",
                 "operationId": "5e9dd82c858753ad481f146678e34951",
                 "requestBody": {
                     "required": true,
@@ -29,15 +29,17 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "João Silva"
+                                        "example": "John Doe"
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "joao@email.com"
+                                        "format": "email",
+                                        "example": "john@example.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "12345678"
+                                        "format": "password",
+                                        "example": "password123"
                                     },
                                     "cpf": {
                                         "type": "string",
@@ -49,7 +51,8 @@
                                     },
                                     "birth_date": {
                                         "type": "string",
-                                        "example": "1990-01-01"
+                                        "format": "date",
+                                        "example": "1995-07-20"
                                     }
                                 },
                                 "type": "object"
@@ -59,7 +62,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usuário criado com sucesso",
+                        "description": "User registered successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -68,7 +71,7 @@
                                             "properties": {
                                                 "token": {
                                                     "type": "string",
-                                                    "example": "1|abc123"
+                                                    "example": "1|plainTextTokenExample"
                                                 },
                                                 "user": {
                                                     "properties": {
@@ -78,11 +81,11 @@
                                                         },
                                                         "name": {
                                                             "type": "string",
-                                                            "example": "João Silva"
+                                                            "example": "John Doe"
                                                         },
                                                         "email": {
                                                             "type": "string",
-                                                            "example": "joao@email.com"
+                                                            "example": "john@example.com"
                                                         }
                                                     },
                                                     "type": "object"
@@ -97,10 +100,13 @@
                         }
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
+                    },
+                    "429": {
+                        "description": "Too many attempts"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 }
             }
@@ -110,7 +116,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Autentica um usuário",
+                "summary": "Authenticate a user",
                 "operationId": "fd38eab35a3cc28d00ada587f6955506",
                 "requestBody": {
                     "required": true,
@@ -124,11 +130,13 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "joao@email.com"
+                                        "format": "email",
+                                        "example": "john@example.com"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "12345678"
+                                        "format": "password",
+                                        "example": "password123"
                                     }
                                 },
                                 "type": "object"
@@ -138,7 +146,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login realizado com sucesso",
+                        "description": "Login successful",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -147,7 +155,7 @@
                                             "properties": {
                                                 "token": {
                                                     "type": "string",
-                                                    "example": "1|abc123"
+                                                    "example": "1|plainTextTokenExample"
                                                 },
                                                 "user": {
                                                     "properties": {
@@ -157,11 +165,11 @@
                                                         },
                                                         "name": {
                                                             "type": "string",
-                                                            "example": "João Silva"
+                                                            "example": "John Doe"
                                                         },
                                                         "email": {
                                                             "type": "string",
-                                                            "example": "joao@email.com"
+                                                            "example": "john@example.com"
                                                         }
                                                     },
                                                     "type": "object"
@@ -176,10 +184,13 @@
                         }
                     },
                     "401": {
-                        "description": "E-mail ou senha incorretos"
+                        "description": "Invalid credentials"
+                    },
+                    "429": {
+                        "description": "Too many attempts"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 }
             }
@@ -189,17 +200,30 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Realiza logout do usuário",
+                "summary": "Log out the authenticated user",
                 "operationId": "d2f0239468d539b07f33e62fab239518",
                 "responses": {
-                    "204": {
-                        "description": "Logout realizado com sucesso"
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -214,11 +238,11 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Retorna o usuário autenticado",
+                "summary": "Get the authenticated user",
                 "operationId": "f3784ad959b8f67b7c37eadc99a5839a",
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "Authenticated user returned successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -231,11 +255,11 @@
                                                 },
                                                 "name": {
                                                     "type": "string",
-                                                    "example": "João Silva"
+                                                    "example": "John Doe"
                                                 },
                                                 "email": {
                                                     "type": "string",
-                                                    "example": "joao@email.com"
+                                                    "example": "john@example.com"
                                                 }
                                             },
                                             "type": "object"
@@ -247,10 +271,10 @@
                         }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -263,7 +287,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Atualiza perfil do usuário autenticado",
+                "summary": "Update the authenticated user profile",
                 "operationId": "1aa65a406c0b209df28939fa8854d95e",
                 "requestBody": {
                     "required": true,
@@ -273,23 +297,31 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "João Atualizado"
+                                        "example": "John Updated"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.updated@example.com"
                                     },
                                     "phone": {
                                         "type": "string",
-                                        "example": "11988888888"
+                                        "example": "11988887777"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "senhaAtual"
+                                        "format": "password",
+                                        "example": "currentPassword123"
                                     },
                                     "new_password": {
                                         "type": "string",
-                                        "example": "novaSenha123"
+                                        "format": "password",
+                                        "example": "newPassword123"
                                     },
                                     "new_password_confirmation": {
                                         "type": "string",
-                                        "example": "novaSenha123"
+                                        "format": "password",
+                                        "example": "newPassword123"
                                     }
                                 },
                                 "type": "object"
@@ -299,16 +331,45 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Perfil atualizado com sucesso"
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Updated"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.updated@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Current password is invalid"
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -323,13 +384,13 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Lista todas as categorias do usuário",
+                "summary": "List the authenticated user's categories",
                 "operationId": "5db9df8dff770a41821df33d4c89fb65",
                 "parameters": [
                     {
                         "name": "archived",
                         "in": "query",
-                        "description": "Se true, inclui categorias arquivadas",
+                        "description": "When true, returns archived categories. When false or omitted, returns active categories.",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -343,42 +404,64 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "Categories returned successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Alimentação"
-                                                    },
-                                                    "is_active": {
-                                                        "type": "boolean",
-                                                        "example": true
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Food"
+                                                            },
+                                                            "is_active": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Você ainda não possui categorias cadastradas para o filtro informado."
                                                 },
-                                                "type": "object"
-                                            }
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
-                                    },
-                                    "type": "object"
+                                    ]
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Invalid archived filter"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -391,7 +474,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Cria uma nova categoria",
+                "summary": "Create a new category",
                 "operationId": "ff205144c189c676a17defb098dfd4c2",
                 "requestBody": {
                     "required": true,
@@ -404,7 +487,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Alimentação"
+                                        "example": "Transport"
                                     }
                                 },
                                 "type": "object"
@@ -414,13 +497,42 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Categoria criada com sucesso"
+                        "description": "Category created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Transport"
+                                                },
+                                                "is_active": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -435,7 +547,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Busca uma categoria por ID",
+                "summary": "Get a category by id",
                 "operationId": "53da1a5f38bcb967376d32a4349bc975",
                 "parameters": [
                     {
@@ -443,19 +555,49 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Category returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Food"
+                                                },
+                                                "is_active": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Categoria não encontrada"
+                        "description": "Category not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -468,7 +610,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Atualiza uma categoria",
+                "summary": "Update a category",
                 "operationId": "ae20ed933ff035f01ad107396234cf03",
                 "parameters": [
                     {
@@ -476,7 +618,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
@@ -491,7 +634,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Transporte"
+                                        "example": "Updated Transport"
                                     }
                                 },
                                 "type": "object"
@@ -501,16 +644,45 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Categoria atualizada com sucesso"
+                        "description": "Category updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Updated Transport"
+                                                },
+                                                "is_active": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Categoria não encontrada"
+                        "description": "Category not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -523,7 +695,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Deleta uma categoria sem transações",
+                "summary": "Delete a category",
                 "operationId": "18576835d0c9e804187f1daa542ae3ee",
                 "parameters": [
                     {
@@ -531,22 +703,39 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Categoria excluída com sucesso"
+                        "description": "Category deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Categoria não encontrada"
+                        "description": "Category not found"
                     },
                     "409": {
-                        "description": "Categoria possui transações vinculadas"
+                        "description": "Category has linked transactions and cannot be deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -561,7 +750,7 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Arquiva uma categoria (is_active = false)",
+                "summary": "Archive a category",
                 "operationId": "f412ab48a01f6f367c082c84b4ebcbfb",
                 "parameters": [
                     {
@@ -569,19 +758,36 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Categoria arquivada com sucesso"
+                        "description": "Category archived successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria arquivada com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Categoria não encontrada"
+                        "description": "Category not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -596,13 +802,13 @@
                 "tags": [
                     "Incomes"
                 ],
-                "summary": "Lista as receitas do usuário",
+                "summary": "List monthly incomes",
                 "operationId": "a758b0bc04a435ea67972386959f40f5",
                 "parameters": [
                     {
                         "name": "month",
                         "in": "query",
-                        "description": "Filtra por mês no formato YYYY-MM",
+                        "description": "Filter by month in YYYY-MM format",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -612,13 +818,66 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Incomes returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "amount": {
+                                                                "type": "number",
+                                                                "example": 5000
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Salary"
+                                                            },
+                                                            "received_at": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-01-05"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Nenhuma receita registrada para o período selecionado."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -631,7 +890,7 @@
                 "tags": [
                     "Incomes"
                 ],
-                "summary": "Registra uma nova receita",
+                "summary": "Create a new income",
                 "operationId": "cce5997731b5392c135514303b3bb290",
                 "requestBody": {
                     "required": true,
@@ -649,10 +908,11 @@
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Salário Janeiro"
+                                        "example": "Salary"
                                     },
                                     "received_at": {
                                         "type": "string",
+                                        "format": "date",
                                         "example": "2025-01-05"
                                     }
                                 },
@@ -663,13 +923,46 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Receita registrada com sucesso"
+                        "description": "Income created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": 5000
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Salary"
+                                                },
+                                                "received_at": {
+                                                    "type": "string",
+                                                    "example": "2025-01-05"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -684,7 +977,7 @@
                 "tags": [
                     "Incomes"
                 ],
-                "summary": "Remove uma receita",
+                "summary": "Delete an income",
                 "operationId": "332d0e722c3a3a8710ef2f7e4e33c3b4",
                 "parameters": [
                     {
@@ -692,19 +985,36 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Receita excluída com sucesso"
+                        "description": "Income deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Receita excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Receita não encontrada"
+                        "description": "Income not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -719,17 +1029,75 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Lista todas as caixinhas do usuário",
+                "summary": "List all savings boxes",
                 "operationId": "b13f1be8c59f13292c99135a09a4bbc5",
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Savings returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Emergency Fund"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Six months of expenses",
+                                                                "nullable": true
+                                                            },
+                                                            "goal_amount": {
+                                                                "type": "number",
+                                                                "example": 10000,
+                                                                "nullable": true
+                                                            },
+                                                            "balance": {
+                                                                "type": "number",
+                                                                "example": 1500
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Você ainda não possui caixinhas criadas."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -742,7 +1110,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Cria uma nova caixinha",
+                "summary": "Create a saving box",
                 "operationId": "ead75b5cffb8122c36a2079dca60e597",
                 "requestBody": {
                     "required": true,
@@ -755,15 +1123,17 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Reserva de Emergência"
+                                        "example": "Emergency Fund"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "6 meses de despesas"
+                                        "example": "Six months of expenses",
+                                        "nullable": true
                                     },
                                     "goal_amount": {
                                         "type": "number",
-                                        "example": 10000
+                                        "example": 10000,
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -773,13 +1143,52 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Caixinha criada com sucesso"
+                        "description": "Saving box created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Emergency Fund"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Six months of expenses",
+                                                    "nullable": true
+                                                },
+                                                "goal_amount": {
+                                                    "type": "number",
+                                                    "example": 10000,
+                                                    "nullable": true
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 0
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -794,7 +1203,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Busca uma caixinha por ID",
+                "summary": "Get a saving box by id",
                 "operationId": "062cd36fd947fb30a37f6205d9186c42",
                 "parameters": [
                     {
@@ -802,19 +1211,72 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Saving box returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Emergency Fund"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Six months of expenses",
+                                                    "nullable": true
+                                                },
+                                                "goal_amount": {
+                                                    "type": "number",
+                                                    "example": 10000,
+                                                    "nullable": true
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 1500
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Caixinha não encontrada"
+                        "description": "Saving box not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -827,7 +1289,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Atualiza uma caixinha",
+                "summary": "Update a saving box",
                 "operationId": "aad6238d531cc956f646a6f8f439b870",
                 "parameters": [
                     {
@@ -835,7 +1297,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
@@ -847,15 +1310,17 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Reserva Atualizada"
+                                        "example": "Updated Emergency Fund"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Nova descrição"
+                                        "example": "Updated description",
+                                        "nullable": true
                                     },
                                     "goal_amount": {
                                         "type": "number",
-                                        "example": 15000
+                                        "example": 12000,
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -865,16 +1330,68 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Caixinha atualizada com sucesso"
+                        "description": "Saving box updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Updated Emergency Fund"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Updated description",
+                                                    "nullable": true
+                                                },
+                                                "goal_amount": {
+                                                    "type": "number",
+                                                    "example": 12000,
+                                                    "nullable": true
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 1500
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Caixinha não encontrada"
+                        "description": "Saving box not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -887,7 +1404,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Deleta uma caixinha com saldo zero",
+                "summary": "Delete a saving box",
                 "operationId": "ab04fc76a76bd154fe92160dbdee5334",
                 "parameters": [
                     {
@@ -895,22 +1412,78 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Caixinha excluída com sucesso"
+                        "description": "Saving box deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Caixinha não encontrada"
+                        "description": "Saving box not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "409": {
-                        "description": "Caixinha possui saldo e não pode ser excluída"
+                        "description": "Saving box cannot be deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Você precisa retirar todo o saldo antes de excluir esta caixinha."
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Esta caixinha possui histórico de movimentações e não pode ser excluída."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -925,7 +1498,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Deposita um valor na caixinha",
+                "summary": "Deposit into a saving box",
                 "operationId": "8cef2f27d3f273b7a9a5118dd9ec7548",
                 "parameters": [
                     {
@@ -933,7 +1506,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
@@ -953,10 +1527,12 @@
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Primeiro depósito"
+                                        "example": "Monthly contribution",
+                                        "nullable": true
                                     },
                                     "date": {
                                         "type": "string",
+                                        "format": "date",
                                         "example": "2025-01-10"
                                     }
                                 },
@@ -967,13 +1543,68 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Depósito realizado com sucesso"
+                        "description": "Deposit completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Emergency Fund"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Six months of expenses",
+                                                    "nullable": true
+                                                },
+                                                "goal_amount": {
+                                                    "type": "number",
+                                                    "example": 10000,
+                                                    "nullable": true
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 2000
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Caixinha não encontrada"
+                        "description": "Saving box not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -988,7 +1619,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Retira um valor da caixinha",
+                "summary": "Withdraw from a saving box",
                 "operationId": "c134af090079f2db551a3a9e0d3b1199",
                 "parameters": [
                     {
@@ -996,7 +1627,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
@@ -1016,10 +1648,12 @@
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Retirada parcial"
+                                        "example": "Partial withdrawal",
+                                        "nullable": true
                                     },
                                     "date": {
                                         "type": "string",
+                                        "format": "date",
                                         "example": "2025-01-20"
                                     }
                                 },
@@ -1030,16 +1664,81 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Retirada realizada com sucesso"
+                        "description": "Withdrawal completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Emergency Fund"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Six months of expenses",
+                                                    "nullable": true
+                                                },
+                                                "goal_amount": {
+                                                    "type": "number",
+                                                    "example": 10000,
+                                                    "nullable": true
+                                                },
+                                                "balance": {
+                                                    "type": "number",
+                                                    "example": 1400
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Caixinha não encontrada"
+                        "description": "Saving box not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Saldo insuficiente"
+                        "description": "Validation failed or insufficient balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Saldo insuficiente para realizar o saque."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1054,7 +1753,7 @@
                 "tags": [
                     "Savings"
                 ],
-                "summary": "Retorna o histórico de movimentações da caixinha",
+                "summary": "Get saving box movement history",
                 "operationId": "1ddacee4ad96328593d586af91011328",
                 "parameters": [
                     {
@@ -1062,52 +1761,90 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "History returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "savings_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "deposit",
+                                                                    "withdraw"
+                                                                ],
+                                                                "example": "deposit"
+                                                            },
+                                                            "amount": {
+                                                                "type": "number",
+                                                                "example": 500
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Monthly contribution",
+                                                                "nullable": true
+                                                            },
+                                                            "date": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-01-10"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Nenhuma movimentação encontrada para esta caixinha."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Saving box not found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "savings_id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "type": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "deposit",
-                                                            "withdraw"
-                                                        ],
-                                                        "example": "deposit"
-                                                    },
-                                                    "amount": {
-                                                        "type": "number",
-                                                        "example": 500
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Primeiro depósito"
-                                                    },
-                                                    "date": {
-                                                        "type": "string",
-                                                        "example": "2025-01-10"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Caixinha não encontrada."
                                         }
                                     },
                                     "type": "object"
@@ -1115,11 +1852,11 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Caixinha não encontrada"
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1134,13 +1871,13 @@
                 "tags": [
                     "Summary"
                 ],
-                "summary": "Retorna o resumo financeiro mensal",
+                "summary": "Get the monthly financial summary",
                 "operationId": "a73c8528c421cb625f5ab65281e87018",
                 "parameters": [
                     {
                         "name": "month",
                         "in": "query",
-                        "description": "Mês no formato YYYY-MM",
+                        "description": "Month in YYYY-MM format",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -1150,7 +1887,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso",
+                        "description": "Summary returned successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1187,7 +1924,7 @@
                                                         "properties": {
                                                             "category": {
                                                                 "type": "string",
-                                                                "example": "Alimentação"
+                                                                "example": "Food"
                                                             },
                                                             "total": {
                                                                 "type": "number",
@@ -1214,14 +1951,14 @@
                             }
                         }
                     },
-                    "422": {
-                        "description": "Parâmetro month obrigatório"
-                    },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Missing or invalid month parameter"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1236,12 +1973,13 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Lista transações com filtros",
+                "summary": "List transactions with filters",
                 "operationId": "98f74ffcb5cbd354fe2e8ef58bec78d8",
                 "parameters": [
                     {
                         "name": "month",
                         "in": "query",
+                        "description": "Filter by month in YYYY-MM format",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1263,6 +2001,7 @@
                         "required": false,
                         "schema": {
                             "type": "string",
+                            "format": "date",
                             "example": "2025-01-01"
                         }
                     },
@@ -1272,6 +2011,7 @@
                         "required": false,
                         "schema": {
                             "type": "string",
+                            "format": "date",
                             "example": "2025-01-31"
                         }
                     },
@@ -1281,6 +2021,7 @@
                         "required": false,
                         "schema": {
                             "type": "number",
+                            "format": "float",
                             "example": 50
                         }
                     },
@@ -1290,6 +2031,7 @@
                         "required": false,
                         "schema": {
                             "type": "number",
+                            "format": "float",
                             "example": 500
                         }
                     },
@@ -1323,13 +2065,77 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Transactions returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 10
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "expense"
+                                                            },
+                                                            "amount": {
+                                                                "type": "number",
+                                                                "example": 150
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Groceries"
+                                                            },
+                                                            "date": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-01-15"
+                                                            },
+                                                            "category_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Nenhuma transação encontrada para os filtros selecionados."
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Não autenticado"
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation failed"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1342,7 +2148,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Cria uma nova transação",
+                "summary": "Create a new transaction",
                 "operationId": "393f6112c62f0d109c5940472bdce3b9",
                 "requestBody": {
                     "required": true,
@@ -1365,14 +2171,16 @@
                                     },
                                     "amount": {
                                         "type": "number",
+                                        "format": "float",
                                         "example": 150
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Mercado"
+                                        "example": "Groceries"
                                     },
                                     "date": {
                                         "type": "string",
+                                        "format": "date",
                                         "example": "2025-01-15"
                                     },
                                     "category_id": {
@@ -1387,16 +2195,60 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Transação criada com sucesso"
+                        "description": "Transaction created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "expense"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": 150
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Groceries"
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "example": "2025-01-15"
+                                                },
+                                                "category_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Categoria não encontrada"
+                        "description": "Category not found"
+                    },
+                    "409": {
+                        "description": "Archived category cannot receive new transactions"
                     },
                     "422": {
-                        "description": "Dados inválidos ou categoria arquivada"
+                        "description": "Validation failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1411,7 +2263,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Busca uma transação por ID",
+                "summary": "Get a transaction by id",
                 "operationId": "899174e05d8d5c4e8906502e2b2bd2bb",
                 "parameters": [
                     {
@@ -1419,19 +2271,62 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 10
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Sucesso"
+                        "description": "Transaction returned successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "expense"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": 150
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Groceries"
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2025-01-15"
+                                                },
+                                                "category_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Transação não encontrada"
+                        "description": "Transaction not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1444,7 +2339,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Atualiza uma transação (suporta update parcial)",
+                "summary": "Update a transaction (partial updates supported)",
                 "operationId": "5b006bbfed7fc534752eec49d3633dde",
                 "parameters": [
                     {
@@ -1452,7 +2347,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 10
                         }
                     }
                 ],
@@ -1471,19 +2367,21 @@
                                     },
                                     "amount": {
                                         "type": "number",
+                                        "format": "float",
                                         "example": 200
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Mercado e Feira"
+                                        "example": "Groceries and market"
                                     },
                                     "date": {
                                         "type": "string",
-                                        "example": "2025-01-15"
+                                        "format": "date",
+                                        "example": "2025-01-20"
                                     },
                                     "category_id": {
                                         "type": "integer",
-                                        "example": 1
+                                        "example": 2
                                     }
                                 },
                                 "type": "object"
@@ -1493,16 +2391,60 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Transação atualizada com sucesso"
+                        "description": "Transaction updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "expense"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": 200
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Groceries and market"
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "example": "2025-01-20"
+                                                },
+                                                "category_id": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Transação ou categoria não encontrada"
+                        "description": "Transaction not found or category not found"
+                    },
+                    "409": {
+                        "description": "Archived category cannot be linked to a transaction"
                     },
                     "422": {
-                        "description": "Dados inválidos"
+                        "description": "Validation failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [
@@ -1515,7 +2457,7 @@
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Deleta uma transação",
+                "summary": "Delete a transaction",
                 "operationId": "613151ab0aea0ff3b05814212b66cc4a",
                 "parameters": [
                     {
@@ -1523,19 +2465,36 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 10
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Transação excluída com sucesso"
+                        "description": "Transaction deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Transação não encontrada"
+                        "description": "Transaction not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     },
                     "500": {
-                        "description": "Erro interno do servidor"
+                        "description": "Internal server error"
                     }
                 },
                 "security": [

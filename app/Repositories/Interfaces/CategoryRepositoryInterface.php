@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 interface CategoryRepositoryInterface
 {
-    public function findAll(int $userId): Collection;
+    public function findAll(int $userId, bool $includeArchived = false): Collection;
 
     public function findById(int $id, int $userId): ?CategoryDTO;
 

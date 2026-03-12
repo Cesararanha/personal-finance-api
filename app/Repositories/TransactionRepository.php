@@ -15,12 +15,20 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function findAll(int $userId): Collection
     {
-        return $this->model->where('user_id', $userId)->get()->map(fn (Transaction $transaction) => TransactionMapper::toDTO($transaction));
+        return $this->model
+            ->with('category')
+            ->where('user_id', $userId)
+            ->get()
+            ->map(fn (Transaction $transaction) => TransactionMapper::toDTO($transaction));
     }
 
     public function findById(int $id, int $userId): ?TransactionDTO
     {
-        $transaction = $this->model->where('id', $id)->where('user_id', $userId)->first();
+        $transaction = $this->model
+            ->with('category')
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
 
         return $transaction ? TransactionMapper::toDTO($transaction) : null;
     }
@@ -28,6 +36,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function findByMonth(int $userId, int $month, int $year): Collection
     {
         return $this->model
+            ->with('category')
             ->where('user_id', $userId)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
@@ -38,6 +47,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function findByCategory(int $categoryId, int $userId): Collection
     {
         return $this->model
+            ->with('category')
             ->where('category_id', $categoryId)
             ->where('user_id', $userId)
             ->get()
@@ -55,7 +65,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             'type' => $dto->type,
         ]);
 
-        return TransactionMapper::toDTO($transaction);
+        return TransactionMapper::toDTO($transaction->load('category'));
     }
 
     public function update(int $id, TransactionDTO $dto): ?TransactionDTO
@@ -73,7 +83,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             'type' => $dto->type,
         ]);
 
-        return TransactionMapper::toDTO($transaction->fresh());
+        return TransactionMapper::toDTO($transaction->fresh()->load('category'));
     }
 
     public function delete(int $id, int $userId): bool

@@ -106,14 +106,17 @@ class AuthController extends Controller
         try {
             $validated = $request->validated();
             $user = $request->user();
-            if (isset($validated['password'])) {
+
+            if (isset($validated['password']) && isset($validated['new_password'])) {
                 if (! password_verify($validated['password'], $user->password)) {
                     return response()->json(['message' => 'Senha atual incorreta.'], 400);
                 }
-                $validated['password'] = $validated['new_password'];
+                $validated['password'] = bcrypt($validated['new_password']);
+            } else {
+                unset($validated['password']);
             }
 
-            unset($validated['new_password']);
+            unset($validated['new_password'], $validated['new_password_confirmation']);
             $user->update($validated);
 
             $dto = UserMapper::toDTO($user->fresh());

@@ -7,6 +7,7 @@ use App\Models\MonthlyIncome;
 use App\Models\Saving;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Prometheus\Facades\Prometheus;
 
@@ -14,6 +15,10 @@ class PrometheusServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        if (! $this->app->runningInConsole() && ! Schema::hasTable('users')) {
+            return;
+        }
+
         // Usuários
         Prometheus::addGauge('laravel_users_total')
             ->helpText('Total de usuários cadastrados')

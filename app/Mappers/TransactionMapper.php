@@ -43,6 +43,7 @@ class TransactionMapper
             'description' => $dto->description,
             'date' => $dto->date->toDateString(),
             'category_id' => $dto->categoryId,
+            'category_name' => $dto->categoryName,
         ];
     }
 }
