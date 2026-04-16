@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\RecurringTransactionController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TransactionController;
@@ -39,6 +40,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Recurring Transactions
     Route::apiResource('recurring-transactions', RecurringTransactionController::class);
+
+    // Reports
+    Route::post('/reports', [ReportController::class, 'store']);
+    Route::get('/reports/{id}', [ReportController::class, 'show']);
+    Route::get('/reports/{id}/download', [ReportController::class, 'download']);
 
     // Summary
     Route::get('/summary', [SummaryController::class, 'index']);

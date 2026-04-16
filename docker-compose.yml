@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: finance_worker
     restart: unless-stopped
-    command: php artisan queue:work rabbitmq --queue=notifications,default --sleep=3 --tries=3 --timeout=60
+    command: php artisan queue:work rabbitmq --queue=notifications,reports,default --sleep=3 --tries=3 --timeout=60
     working_dir: /var/www
     volumes:
       - .:/var/www
