@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\RecurringTransactionController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TransactionController;
@@ -35,6 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/savings/{id}/deposit', [SavingController::class, 'deposit']);
     Route::post('/savings/{id}/withdraw', [SavingController::class, 'withdraw']);
     Route::get('/savings/{id}/history', [SavingController::class, 'history']);
+
+    // Recurring Transactions
+    Route::apiResource('recurring-transactions', RecurringTransactionController::class);
 
     // Summary
     Route::get('/summary', [SummaryController::class, 'index']);

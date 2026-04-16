@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Repositories\CategoryRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\MonthlyIncomeRepositoryInterface;
+use App\Repositories\Interfaces\RecurringTransactionRepositoryInterface;
 use App\Repositories\Interfaces\SavingRepositoryInterface;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\MonthlyIncomeRepository;
+use App\Repositories\RecurringTransactionRepository;
 use App\Repositories\SavingRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
         $this->app->bind(MonthlyIncomeRepositoryInterface::class, MonthlyIncomeRepository::class);
         $this->app->bind(SavingRepositoryInterface::class, SavingRepository::class);
+        $this->app->bind(RecurringTransactionRepositoryInterface::class, RecurringTransactionRepository::class);
     }
 
     public function boot(): void {}
