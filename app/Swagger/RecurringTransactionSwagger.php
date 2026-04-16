@@ -36,6 +36,7 @@ class RecurringTransactionSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function index() {}
 
     /**
      * @OA\Post(
@@ -79,6 +80,7 @@ class RecurringTransactionSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function store() {}
 
     /**
      * @OA\Get(
@@ -94,6 +96,7 @@ class RecurringTransactionSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function show() {}
 
     /**
      * @OA\Put(
@@ -122,6 +125,7 @@ class RecurringTransactionSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function update() {}
 
     /**
      * @OA\Delete(
@@ -137,4 +141,5 @@ class RecurringTransactionSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function destroy() {}
 }

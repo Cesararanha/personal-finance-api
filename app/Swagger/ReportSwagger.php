@@ -46,6 +46,7 @@ class ReportSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function store() {}
 
     /**
      * @OA\Get(
@@ -76,6 +77,7 @@ class ReportSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function show() {}
 
     /**
      * @OA\Get(
@@ -102,4 +104,5 @@ class ReportSwagger
      *     @OA\Response(response=401, description="Não autenticado")
      * )
      */
+    public function download() {}
 }
