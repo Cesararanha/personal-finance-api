@@ -40,8 +40,14 @@ class GenerateReportJob implements ShouldQueue
 
             $report->update(['status' => 'done', 'file_path' => $filePath]);
 
+            $downloadUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+                'reports.download',
+                now()->addHours(24),
+                ['id' => $report->id]
+            );
+
             Mail::to($report->user->email)->send(
-                new ReportReadyMail($report->id, $report->type, $report->user->name)
+                new ReportReadyMail($report->id, $report->type, $report->user->name, $downloadUrl)
             );
         } catch (\Exception $e) {
             $report->update(['status' => 'failed']);

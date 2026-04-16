@@ -23,10 +23,8 @@
             <p>Olá, <strong>{{ $userName }}</strong>!</p>
             <span class="badge">✓ Relatório pronto</span>
             <p>Seu relatório <strong>{{ strtoupper($reportType) }}</strong> foi gerado com sucesso e já está disponível para download.</p>
-            <p>Use o endpoint abaixo para baixar:</p>
-            <code style="background:#f4f4f4; padding: 8px 12px; border-radius: 4px; display: block; font-size: 13px;">
-                GET /api/reports/{{ $reportId }}/download
-            </code>
+            <p>Clique no botão abaixo para baixar. O link expira em <strong>24 horas</strong>.</p>
+            <a href="{{ $downloadUrl }}" class="btn">Baixar relatório {{ strtoupper($reportType) }}</a>
         </div>
         <div class="footer">
             <p>Este é um e-mail automático. Não responda esta mensagem.</p>

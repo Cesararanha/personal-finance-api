@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/reports/{id}/file', [ReportController::class, 'downloadSigned'])
+    ->middleware('signed')
+    ->name('reports.download');
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // Auth

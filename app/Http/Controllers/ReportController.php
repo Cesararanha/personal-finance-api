@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Http\Response;
 
 class ReportController extends Controller
 {
@@ -62,6 +63,31 @@ class ReportController extends Controller
                     'created_at' => $report->created_at->toDateTimeString(),
                 ],
             ], 200);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
+            return response()->json(['message' => 'Ocorreu um erro interno. Tente novamente.'], 500);
+        }
+    }
+
+    public function downloadSigned(int $id): StreamedResponse|JsonResponse
+    {
+        try {
+            $report = ReportRequest::where('id', $id)
+                ->where('status', 'done')
+                ->whereNotNull('file_path')
+                ->first();
+
+            if (! $report) {
+                return response()->json(['message' => 'Relatório não encontrado ou ainda não está pronto.'], 404);
+            }
+
+            $mimeType = $report->type === 'pdf' ? 'application/pdf' : 'text/csv';
+            $filename = "relatorio-{$report->id}.{$report->type}";
+
+            return Storage::download($report->file_path, $filename, [
+                'Content-Type' => $mimeType,
+            ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 

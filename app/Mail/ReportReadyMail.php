@@ -16,6 +16,7 @@ class ReportReadyMail extends Mailable
         public readonly int $reportId,
         public readonly string $reportType,
         public readonly string $userName,
+        public readonly string $downloadUrl,
     ) {}
 
     public function envelope(): Envelope
@@ -29,6 +30,12 @@ class ReportReadyMail extends Mailable
     {
         return new Content(
             view: 'emails.report_ready',
+            with: [
+                'reportId' => $this->reportId,
+                'reportType' => $this->reportType,
+                'userName' => $this->userName,
+                'downloadUrl' => $this->downloadUrl,
+            ],
         );
     }
 }
