@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\RecurringTransactionController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SummaryController;
 use App\Http\Controllers\TransactionController;
@@ -10,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/reports/{id}/file', [ReportController::class, 'downloadSigned'])
+    ->middleware('signed')
+    ->name('reports.download');
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -35,6 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/savings/{id}/deposit', [SavingController::class, 'deposit']);
     Route::post('/savings/{id}/withdraw', [SavingController::class, 'withdraw']);
     Route::get('/savings/{id}/history', [SavingController::class, 'history']);
+
+    // Recurring Transactions
+    Route::apiResource('recurring-transactions', RecurringTransactionController::class);
+
+    // Reports
+    Route::post('/reports', [ReportController::class, 'store']);
+    Route::get('/reports/{id}', [ReportController::class, 'show']);
+    Route::get('/reports/{id}/download', [ReportController::class, 'download']);
 
     // Summary
     Route::get('/summary', [SummaryController::class, 'index']);

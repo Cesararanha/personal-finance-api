@@ -334,6 +334,126 @@
         {
           "expr": "app_laravel_savings_balance_total",
           "legendFormat": "Saldo em Caixinhas (R$)"
+        },
+        {
+          "expr": "app_laravel_recurring_transactions_active_total",
+          "legendFormat": "Recorrências Ativas"
+        },
+        {
+          "expr": "app_laravel_report_requests_done_total",
+          "legendFormat": "Relatórios Gerados"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "🔁 Transações Recorrentes",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 20, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "teal" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "teal", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_recurring_transactions_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "✅ Recorrências Ativas",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 20, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_recurring_transactions_active_total",
+          "legendFormat": "Ativas"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "📄 Relatórios Solicitados",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 20, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_report_requests_total",
+          "legendFormat": "Total"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "✅ Relatórios Concluídos",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 20, "w": 6, "h": 4 },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "app_laravel_report_requests_done_total",
+          "legendFormat": "Concluídos"
         }
       ]
     }

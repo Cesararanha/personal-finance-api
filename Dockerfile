@@ -4,7 +4,7 @@ WORKDIR /var/www
 
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql
+    && docker-php-ext-install pdo pdo_pgsql sockets
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

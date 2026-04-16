@@ -63,5 +63,23 @@ class PrometheusServiceProvider extends ServiceProvider
         Prometheus::addGauge('laravel_savings_balance_total')
             ->helpText('Saldo total acumulado em todas as caixinhas')
             ->value(fn () => round((float) Saving::sum('balance'), 2));
+
+        // Transações Recorrentes
+        Prometheus::addGauge('laravel_recurring_transactions_total')
+            ->helpText('Total de transações recorrentes cadastradas')
+            ->value(fn () => \App\Models\RecurringTransaction::count());
+
+        Prometheus::addGauge('laravel_recurring_transactions_active_total')
+            ->helpText('Total de transações recorrentes ativas')
+            ->value(fn () => \App\Models\RecurringTransaction::where('is_active', true)->count());
+
+        // Relatórios
+        Prometheus::addGauge('laravel_report_requests_total')
+            ->helpText('Total de relatórios solicitados')
+            ->value(fn () => \App\Models\ReportRequest::count());
+
+        Prometheus::addGauge('laravel_report_requests_done_total')
+            ->helpText('Total de relatórios concluídos')
+            ->value(fn () => \App\Models\ReportRequest::where('status', 'done')->count());
     }
 }

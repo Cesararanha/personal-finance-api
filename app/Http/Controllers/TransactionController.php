@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use App\Jobs\SendTransactionNotificationJob;
 use App\Mappers\TransactionMapper;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -99,6 +100,11 @@ class TransactionController extends Controller
             $dto = TransactionMapper::fromRequest($validated, $userId);
             $transaction = $this->repository->create($dto);
             $data = TransactionMapper::toArray($transaction);
+
+            $user = $request->user();
+            SendTransactionNotificationJob::dispatch($data, $user->email, $user->name)
+                ->onConnection('rabbitmq')
+                ->onQueue('notifications');
 
             return response()->json([
                 'data' => $data,

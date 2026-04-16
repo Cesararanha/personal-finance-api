@@ -1,6 +1,6 @@
 # 💰 Personal Finance API
 
-A RESTful API for personal finance management, built with **Laravel 12**, **PostgreSQL 15**, and containerized with **Docker**. Features complete authentication, expense tracking, monthly income management, savings goals ("caixinhas"), category archiving, advanced filtering, API documentation with Swagger, and observability with Prometheus and Grafana.
+A RESTful API for personal finance management, built with **Laravel 12**, **PostgreSQL 15**, and containerized with **Docker**. Features complete authentication, expense tracking, monthly income management, savings goals ("caixinhas"), recurring transactions, async PDF/CSV report generation via **RabbitMQ**, email notifications via **Mailpit**, API documentation with Swagger, and observability with Prometheus and Grafana.
 
 ---
 
@@ -34,6 +34,9 @@ The Personal Finance API allows users to manage their personal finances through 
 - Savings goals ("caixinhas") with deposit, withdraw and transaction history
 - Profile management — update name, phone and password
 - Monthly financial summary with balance, savings balance and breakdown by category
+- Recurring transactions with automatic daily processing via scheduled job
+- Async PDF/CSV report generation dispatched to RabbitMQ — email sent when ready
+- Email notifications on transaction creation via Mailpit (dev) / SMTP (prod)
 - Interactive API documentation via Swagger UI
 - Real-time application metrics via Prometheus + Grafana dashboard
 
@@ -47,7 +50,12 @@ The Personal Finance API allows users to manage their personal finances through 
 | Framework | Laravel 12 |
 | Database | PostgreSQL 15 |
 | Authentication | Laravel Sanctum (Bearer Token) |
+| Message Broker | RabbitMQ 3.13 |
+| Queue Driver | vladimir-yuldashev/laravel-queue-rabbitmq |
+| PDF Generation | barryvdh/laravel-dompdf |
+| Email (dev) | Mailpit |
 | API Documentation | L5-Swagger (OpenAPI 3.0) |
+| API Testing | Newman (Postman CLI) |
 | Metrics | Spatie Laravel Prometheus |
 | Observability | Prometheus + Grafana |
 | Containerization | Docker + Docker Compose |
@@ -79,6 +87,19 @@ JSON Response
 - **DTO (Data Transfer Object)** — typed objects that carry data between layers without exposing database models
 - **Mapper** — handles all transformations between Request arrays, DTOs, and Models
 - **Dependency Injection** — Laravel's service container binds interfaces to implementations via `AppServiceProvider`
+
+**Async processing flow (RabbitMQ):**
+```
+API (finance_app)                RabbitMQ            Worker (finance_worker)
+      │                              │                        │
+      │── dispatch Job ─────────────►│                        │
+      │                              │── consume Job ────────►│
+      │                              │                        │── generate PDF/CSV
+      │                              │                        │── send email (Mailpit)
+      │                              │                        │── update status → done
+```
+- `finance_worker` — consumes queues `notifications` and `reports` via `php artisan queue:work`
+- `finance_scheduler` — runs `php artisan schedule:work` to dispatch recurring transaction jobs daily at 00:00
 
 ---
 
@@ -136,6 +157,15 @@ docker compose exec app php artisan l5-swagger:generate
 
 # Access PostgreSQL shell
 docker compose exec db psql -U finance_user -d finance_db
+
+# View worker logs
+docker compose logs worker
+
+# Run API regression tests with Newman
+npm run test:api
+
+# Force process recurring transactions manually
+docker compose exec app php artisan schedule:run
 ```
 
 ---
@@ -155,6 +185,15 @@ docker compose exec db psql -U finance_user -d finance_db
 | `DB_DATABASE` | Database name | `finance_db` |
 | `DB_USERNAME` | Database user | `finance_user` |
 | `DB_PASSWORD` | Database password | `finance_pass` |
+| `RABBITMQ_HOST` | RabbitMQ host | `rabbitmq` |
+| `RABBITMQ_PORT` | RabbitMQ AMQP port | `5672` |
+| `RABBITMQ_USER` | RabbitMQ user | `guest` |
+| `RABBITMQ_PASSWORD` | RabbitMQ password | `guest` |
+| `RABBITMQ_QUEUE` | Default queue name | `default` |
+| `MAIL_MAILER` | Mail driver | `smtp` |
+| `MAIL_HOST` | SMTP host | `mailpit` |
+| `MAIL_PORT` | SMTP port | `1025` |
+| `MAIL_FROM_ADDRESS` | Sender address | `noreply@finance.local` |
 
 ---
 
@@ -218,6 +257,26 @@ docker compose exec db psql -U finance_user -d finance_db
 | `POST` | `/api/savings/{id}/deposit` | Deposit into a savings goal |
 | `POST` | `/api/savings/{id}/withdraw` | Withdraw from a savings goal |
 | `GET` | `/api/savings/{id}/history` | Get transaction history of a savings goal |
+
+#### Recurring Transactions
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/recurring-transactions` | List all recurring transactions |
+| `POST` | `/api/recurring-transactions` | Create a recurring transaction |
+| `GET` | `/api/recurring-transactions/{id}` | Get a recurring transaction by ID |
+| `PUT` | `/api/recurring-transactions/{id}` | Update a recurring transaction |
+| `DELETE` | `/api/recurring-transactions/{id}` | Delete a recurring transaction |
+
+#### Reports
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/reports` | Request async PDF or CSV report generation |
+| `GET` | `/api/reports/{id}` | Check report status |
+| `GET` | `/api/reports/{id}/download` | Download the generated file (requires auth) |
+
+> The signed download link sent by email (`/api/reports/{id}/file`) does not require authentication — it expires in 24 hours.
 
 #### Summary
 
@@ -310,6 +369,20 @@ curl -X POST http://localhost:8000/api/logout \
 - Every deposit and withdraw is recorded as a `SavingTransaction` and accessible via `/history`
 - Deposit and withdraw operations are wrapped in database transactions to guarantee consistency
 
+### Recurring Transactions
+- Every active recurring transaction with `next_due_date <= today` is processed daily at 00:00 by `ProcessRecurringTransactionsJob`
+- After processing, a real `Transaction` is created and `next_due_date` is advanced according to the frequency
+- Deactivating a recurring transaction (`is_active = false`) stops it from being processed
+- An email notification is sent for each transaction created by a recurring job
+
+### Reports
+- Report generation is asynchronous — the API responds `202` immediately and the worker processes the job
+- Status transitions: `pending` → `processing` → `done` | `failed`
+- Supported formats: `pdf` and `csv`
+- Available filters: `month` (YYYY-MM), `start_date` + `end_date`, `category_id`
+- When done, an email is sent with a signed download link valid for **24 hours**
+- The `/api/reports/{id}/download` endpoint requires Bearer auth and has no expiry
+
 ### Summary
 - The `month` parameter is required — returns `422` if missing
 - `total_income` — sum of all `MonthlyIncome` records for the given month
@@ -364,6 +437,8 @@ app/
 │   │   ├── TransactionController.php
 │   │   ├── IncomeController.php
 │   │   ├── SavingController.php
+│   │   ├── RecurringTransactionController.php
+│   │   ├── ReportController.php
 │   │   └── SummaryController.php
 │   └── Requests/
 │       ├── StoreCategoryRequest.php
@@ -373,38 +448,52 @@ app/
 │       ├── StoreIncomeRequest.php
 │       ├── StoreSavingRequest.php
 │       ├── UpdateSavingRequest.php
-│       └── SavingMovementRequest.php
+│       ├── SavingMovementRequest.php
+│       └── StoreReportRequest.php
+├── Jobs/
+│   ├── SendTransactionNotificationJob.php
+│   ├── ProcessRecurringTransactionsJob.php
+│   └── GenerateReportJob.php
+├── Mail/
+│   ├── TransactionCreatedMail.php
+│   └── ReportReadyMail.php
 ├── Models/
 │   ├── User.php
 │   ├── Category.php
 │   ├── Transaction.php
 │   ├── MonthlyIncome.php
 │   ├── Saving.php
-│   └── SavingTransaction.php
+│   ├── SavingTransaction.php
+│   ├── RecurringTransaction.php
+│   └── ReportRequest.php
 ├── DTOs/
 │   ├── CategoryDTO.php
 │   ├── TransactionDTO.php
 │   ├── MonthlyIncomeDTO.php
 │   ├── SavingDTO.php
-│   └── SavingTransactionDTO.php
+│   ├── SavingTransactionDTO.php
+│   └── RecurringTransactionDTO.php
 ├── Mappers/
 │   ├── CategoryMapper.php
 │   ├── TransactionMapper.php
 │   ├── MonthlyIncomeMapper.php
 │   ├── SavingMapper.php
-│   └── SavingTransactionMapper.php
+│   ├── SavingTransactionMapper.php
+│   └── RecurringTransactionMapper.php
 ├── Repositories/
 │   ├── Interfaces/
 │   │   ├── CategoryRepositoryInterface.php
 │   │   ├── TransactionRepositoryInterface.php
 │   │   ├── MonthlyIncomeRepositoryInterface.php
 │   │   ├── SavingRepositoryInterface.php
-│   │   └── UserRepositoryInterface.php
+│   │   ├── UserRepositoryInterface.php
+│   │   └── RecurringTransactionRepositoryInterface.php
 │   ├── CategoryRepository.php
 │   ├── TransactionRepository.php
 │   ├── MonthlyIncomeRepository.php
 │   ├── SavingRepository.php
-│   └── UserRepository.php
+│   ├── UserRepository.php
+│   └── RecurringTransactionRepository.php
 ├── Providers/
 │   ├── AppServiceProvider.php
 │   └── PrometheusServiceProvider.php
@@ -414,6 +503,8 @@ app/
     ├── TransactionSwagger.php
     ├── IncomeSwagger.php
     ├── SavingSwagger.php
+    ├── RecurringTransactionSwagger.php
+    ├── ReportSwagger.php
     └── SummarySwagger.php
 
 database/
@@ -424,7 +515,9 @@ database/
     ├── add_is_active_to_categories_table.php
     ├── create_monthly_incomes_table.php
     ├── create_savings_table.php
-    └── create_savings_transactions_table.php
+    ├── create_savings_transactions_table.php
+    ├── create_recurring_transactions_table.php
+    └── create_report_requests_table.php
 
 docker/
 ├── prometheus.yml
@@ -453,7 +546,7 @@ To regenerate the documentation after changes:
 docker compose exec app php artisan l5-swagger:generate
 ```
 
-The documentation covers all endpoints grouped by domain (**Auth**, **Categories**, **Transactions**, **Incomes**, **Savings**, **Summary**) with full request body schemas, parameter descriptions, and all expected response codes.
+The documentation covers all endpoints grouped by domain (**Auth**, **Categories**, **Transactions**, **Incomes**, **Savings**, **Recurring Transactions**, **Reports**, **Summary**) with full request body schemas, parameter descriptions, and all expected response codes.
 
 ---
 
@@ -480,6 +573,10 @@ http://localhost:8000/metrics
 | `app_laravel_incomes_amount_total` | Sum of all income amounts (R$) |
 | `app_laravel_savings_total` | Total savings goals |
 | `app_laravel_savings_balance_total` | Total balance across all savings goals (R$) |
+| `app_laravel_recurring_transactions_total` | Total recurring transactions |
+| `app_laravel_recurring_transactions_active_total` | Total active recurring transactions |
+| `app_laravel_report_requests_total` | Total report requests |
+| `app_laravel_report_requests_done_total` | Total completed reports |
 
 ### Prometheus
 
@@ -503,6 +600,11 @@ The **Personal Finance API** dashboard is automatically provisioned and displays
 - **Row 1** — Total users, transactions, incomes and savings goals
 - **Row 2** — Active categories, archived categories, total categories and average transaction amount
 - **Row 3** — Total income sum, total savings balance, categories donut chart and platform summary table
+- **Row 4** — Total recurring transactions, active recurring transactions, total reports requested and completed reports
+
+Also accessible at `http://localhost:15672` — **RabbitMQ Management UI** (default credentials: `guest` / `guest`) to inspect queues and message rates.
+
+**Email (dev):** All outgoing emails are captured by Mailpit at `http://localhost:8025`.
 
 ---
 
@@ -512,9 +614,7 @@ The following features are planned for the next version:
 
 - **Soft delete** — all entities will support soft deletion for data recovery and audit history
 - **Transaction tags** — free-form tags for finer classification beyond categories
-- **Recurring transactions** — define monthly recurring expenses that are automatically created
 - **Budget goals** — set monthly spending limits per category with alerts when approaching the limit
-- **Export** — export transactions and summaries to CSV or PDF
 - **Multi-currency support** — track transactions in different currencies with conversion
 
 ---
@@ -544,6 +644,10 @@ The following features are planned for the next version:
 |---|---|---|
 | `finance_app` | Laravel Application | `8000` |
 | `finance_db` | PostgreSQL 15 | `5432` |
+| `finance_rabbitmq` | RabbitMQ + Management UI | `5672` / `15672` |
+| `finance_mailpit` | Mailpit SMTP + Web UI | `1025` / `8025` |
+| `finance_worker` | Laravel Queue Worker | — |
+| `finance_scheduler` | Laravel Scheduler | — |
 | `finance_prometheus` | Prometheus | `9090` |
 | `finance_grafana` | Grafana | `3000` |
 
